@@ -1,13 +1,8 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-import envConfig from '../config/envConfig';
+import { AppConfigModule } from '../config/app/config.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [envConfig], cache: true }),
-    TypeOrmModule.forRoot()
-  ],
+  imports: [AppConfigModule],
   controllers: [],
   providers: []
 })
