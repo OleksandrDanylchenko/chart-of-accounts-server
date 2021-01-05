@@ -9,7 +9,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     ConfigModule.forRoot({
       load: [configuration],
       validationSchema: Joi.object({
-        APP_NAME: Joi.string().default('MyApp'),
+        APP_NAME: Joi.string().default('chart-of-accounts-server'),
         APP_ENV: Joi.string()
           .valid('development', 'production', 'test', 'provision')
           .default('development'),
