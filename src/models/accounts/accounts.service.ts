@@ -32,14 +32,7 @@ export class AccountsService {
   }
 
   async create(inputs: CreateAccountDto): Promise<AccountEntity> {
-    const accountWithNumber = await this.accountsRepository.getByNumber(
-      inputs.number
-    );
-    if (accountWithNumber) {
-      throw new BadRequestException(
-        `Account with provided number "${inputs.number}" already exists!`
-      );
-    }
+    await this.validateAccountNumberNotExist(inputs.number);
     return await this.accountsRepository.createEntity(inputs);
   }
 
@@ -47,6 +40,18 @@ export class AccountsService {
     account: AccountEntity,
     inputs: EditAccountDto
   ): Promise<AccountEntity> {
+    if (inputs.number && inputs.number !== account.number) {
+      await this.validateAccountNumberNotExist(inputs.number);
+    }
     return await this.accountsRepository.updateEntity(account, inputs);
+  }
+
+  async validateAccountNumberNotExist(number: number): Promise<void> {
+    const accountWithNumber = await this.accountsRepository.getByNumber(number);
+    if (accountWithNumber) {
+      throw new BadRequestException(
+        `Account with provided number "${number}" already exists!`
+      );
+    }
   }
 }
