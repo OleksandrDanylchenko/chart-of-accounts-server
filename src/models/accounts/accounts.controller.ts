@@ -13,6 +13,7 @@ import {
 } from '@nestjs/common';
 import {
   AccountEntity,
+  accountGroupsWithSyntheticForSerializing,
   defaultAccountGroupsForSerializing
 } from './serializers/account.serializer';
 import { AccountsService } from './accounts.service';
@@ -30,11 +31,27 @@ export class AccountsController {
     return await this.accountsService.getAll();
   }
 
-  @Get('/:id')
+  @Get('/single/:id')
   @SerializeOptions({ groups: defaultAccountGroupsForSerializing })
   @UseInterceptors(ClassSerializerInterceptor)
   async getById(@Param('id', ParseIntPipe) id: string): Promise<AccountEntity> {
     return await this.accountsService.get(id);
+  }
+
+  @Get('/with-synthetic')
+  @SerializeOptions({ groups: accountGroupsWithSyntheticForSerializing })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getWithSynthetic(): Promise<AccountEntity[]> {
+    return await this.accountsService.getAll(['syntheticAccounts']);
+  }
+
+  @Get('/with-synthetic/single/:id')
+  @SerializeOptions({ groups: accountGroupsWithSyntheticForSerializing })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getWithSyntheticById(
+    @Param('id', ParseIntPipe) id: string
+  ): Promise<AccountEntity> {
+    return await this.accountsService.get(id, ['syntheticAccounts']);
   }
 
   @Post('/')
