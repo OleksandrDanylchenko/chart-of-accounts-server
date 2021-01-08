@@ -10,15 +10,15 @@ export class EditAccountDto {
   @IsOptional()
   @IsInt()
   @IsPositive()
-  number: number;
+  number?: number;
 
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  title: string;
+  title?: string;
 
   @IsOptional()
   @IsString()
   @IsNotEmpty()
-  description: string;
+  description?: string;
 }
