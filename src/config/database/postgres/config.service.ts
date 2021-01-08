@@ -5,14 +5,10 @@ import {
   getPaths,
   getRuntimePaths
 } from '../../utils/envParser.helper';
-import { AppConfigService } from '../../app/config.service';
 
 @Injectable()
 export class PostgresConfigService {
-  constructor(
-    private configService: ConfigService,
-    private appConfigService: AppConfigService
-  ) {}
+  constructor(private configService: ConfigService) {}
 
   get name(): string {
     return this.configService.get<string>('postgres.name');
@@ -57,7 +53,7 @@ export class PostgresConfigService {
   get migrations(): string[] {
     const migrations = this.configService.get<string>('postgres.migrations');
     const migrationsPaths = getPaths(getEnvArray(migrations));
-    return getRuntimePaths(this.appConfigService.env, migrationsPaths);
+    return getRuntimePaths(migrationsPaths);
   }
 
   get migrationsDir(): string[] {
@@ -65,25 +61,25 @@ export class PostgresConfigService {
       'postgres.migrationsDir'
     );
     const migrationsDirsPaths = getPaths(getEnvArray(migrationsDirs));
-    return getRuntimePaths(this.appConfigService.env, migrationsDirsPaths);
+    return getRuntimePaths(migrationsDirsPaths);
   }
 
   get entities(): string[] {
     const entities = this.configService.get<string>('postgres.entities');
     const entitiesPaths = getPaths(getEnvArray(entities));
-    return getRuntimePaths(this.appConfigService.env, entitiesPaths);
+    return getRuntimePaths(entitiesPaths);
   }
 
   get entitiesDir(): string[] {
     const entitiesDir = this.configService.get<string>('postgres.entitiesDir');
     const entitiesDirPaths = getPaths(getEnvArray(entitiesDir));
-    return getRuntimePaths(this.appConfigService.env, entitiesDirPaths);
+    return getRuntimePaths(entitiesDirPaths);
   }
 
   get subscribers(): string[] {
     const subscribers = this.configService.get<string>('postgres.subscribers');
     const subscribersPaths = getPaths(getEnvArray(subscribers));
-    return getRuntimePaths(this.appConfigService.env, subscribersPaths);
+    return getRuntimePaths(subscribersPaths);
   }
 
   get subscribersDir(): string[] {
@@ -91,6 +87,6 @@ export class PostgresConfigService {
       'postgres.subscribersDir'
     );
     const subscribersDirPaths = getPaths(getEnvArray(subscribersDir));
-    return getRuntimePaths(this.appConfigService.env, subscribersDirPaths);
+    return getRuntimePaths(subscribersDirPaths);
   }
 }

@@ -3,7 +3,6 @@ import { Module } from '@nestjs/common';
 import configuration from './configuration';
 import { PostgresConfigService } from './config.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { AppConfigService } from '../../app/config.service';
 
 @Module({
   imports: [
@@ -12,7 +11,7 @@ import { AppConfigService } from '../../app/config.service';
       validationSchema: Joi.object({
         TYPEORM_CONNECTION_NAME: Joi.string().default('default'),
         TYPEORM_CONNECTION: Joi.string()
-          .valid('postgres', 'mysql')
+          .valid('postgres', 'mysql', 'msserver')
           .default('postgres'),
         TYPEORM_PORT: Joi.number().integer().default(5432),
         TYPEORM_HOST: Joi.string().default('localhost'),
@@ -32,7 +31,7 @@ import { AppConfigService } from '../../app/config.service';
       cache: true
     })
   ],
-  providers: [ConfigService, PostgresConfigService, AppConfigService],
+  providers: [ConfigService, PostgresConfigService],
   exports: [ConfigService, PostgresConfigService]
 })
 export class PostgresConfigModule {}

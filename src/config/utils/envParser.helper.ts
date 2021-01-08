@@ -5,10 +5,8 @@ export const getEnvArray = (
   delimiter = ','
 ): string[] => envArrayString.split(delimiter) || [];
 
-export const getRuntimePaths = (env: string, envPaths: string[]): string[] =>
-  env.toLocaleLowerCase() === 'production'
-    ? envPaths.map((path) => path.replace('src', 'dist'))
-    : envPaths;
+export const getRuntimePaths = (envPaths: string[]): string[] =>
+  envPaths.map((path) => path.replace('src', 'dist').replace('.ts', '.js'));
 
 export const getPath = (path: string): string => {
   return join(process.cwd(), path || '');
