@@ -81,6 +81,17 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
       .catch((error) => Promise.reject(error));
   }
 
+  async updateNestedEntity(
+    entity: K,
+    inputs: DeepPartial<T>,
+    relations: string[] = []
+  ): Promise<K> {
+    const nestedEntity = { id: entity.id, ...inputs } as DeepPartial<T>;
+    return this.save(nestedEntity)
+      .then(async () => await this.getById(entity.id, relations))
+      .catch((error) => Promise.reject(error));
+  }
+
   async deleteEntity(entity: K): Promise<DeleteResult> {
     return this.delete(entity.id)
       .then((deletionResult) => Promise.resolve(deletionResult))
