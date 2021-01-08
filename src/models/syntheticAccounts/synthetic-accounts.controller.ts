@@ -10,7 +10,8 @@ import {
 import { SyntheticAccountsService } from './synthetic-accounts.service';
 import {
   defaultSyntheticAccountGroupsForSerializing,
-  SyntheticAccountEntity
+  SyntheticAccountEntity,
+  syntheticAccountWithLinkedSyntheticAccountsGroupsForSerializing
 } from './serializers/synthetic-account.serializer';
 
 @Controller('synthetic-accounts')
@@ -26,12 +27,38 @@ export class SyntheticAccountsController {
     return await this.syntheticAccountsService.getAll();
   }
 
-  @Get('/:id')
+  @Get('/single/:id')
   @SerializeOptions({ groups: defaultSyntheticAccountGroupsForSerializing })
   @UseInterceptors(ClassSerializerInterceptor)
   async getById(
     @Param('id', ParseIntPipe) id: string
   ): Promise<SyntheticAccountEntity> {
     return await this.syntheticAccountsService.get(id);
+  }
+
+  @Get('/with-linked')
+  @SerializeOptions({
+    groups: syntheticAccountWithLinkedSyntheticAccountsGroupsForSerializing
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getWithLinked(): Promise<SyntheticAccountEntity[]> {
+    return await this.syntheticAccountsService.getAll([
+      'byDebitAccounts',
+      'byCreditAccounts'
+    ]);
+  }
+
+  @Get('/with-linked/single/:id')
+  @SerializeOptions({
+    groups: syntheticAccountWithLinkedSyntheticAccountsGroupsForSerializing
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getWithLinkedById(
+    @Param('id', ParseIntPipe) id: string
+  ): Promise<SyntheticAccountEntity> {
+    return await this.syntheticAccountsService.get(id, [
+      'byDebitAccounts',
+      'byCreditAccounts'
+    ]);
   }
 }
