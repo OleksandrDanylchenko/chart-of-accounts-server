@@ -2,9 +2,6 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SyntheticAccountsRepository } from './synthetic-accounts.repository';
 import { SyntheticAccountEntity } from './serializers/synthetic-account.serializer';
-import { CreateAccountDto } from '../accounts/dtos/create-account.dto';
-import { AccountEntity } from '../accounts/serializers/account.serializer';
-import { EditAccountDto } from '../accounts/dtos/edit-account.dto';
 import { EditSyntheticAccountDto } from './dtos/edit-synt-account.dto';
 import { CreateSyntheticAccountDto } from './dtos/create-synt-account.dto';
 import { SyntheticAccount } from './entities/synthetic-account.entity';
@@ -76,11 +73,50 @@ export class SyntheticAccountsService {
       await this.validateAccountNumberNotExist(inputs.number);
     }
 
-    return await this.syntheticAccountsRepository.updateEntity(
-      account,
-      inputs,
-      ['byDebitAccounts', 'byCreditAccounts']
-    );
+    const {
+      byDebitAccountsIds,
+      byCreditAccountsIds,
+      ...updatedSyntheticAccountData
+    } = inputs;
+
+    const updatedSyntheticAccount = {
+      byDebitAccounts: undefined,
+      byCreditAccounts: undefined,
+      ...updatedSyntheticAccountData
+    };
+
+    const isDebitAccountsChanged =
+      byDebitAccountsIds && byDebitAccountsIds.length > 0;
+    const isCreditAccountsChanged =
+      byCreditAccountsIds && byCreditAccountsIds.length > 0;
+
+    if (isDebitAccountsChanged) {
+      updatedSyntheticAccount.byDebitAccounts = await this.resolveLinkedSyntheticAccounts(
+        byDebitAccountsIds
+      );
+    } else {
+      delete updatedSyntheticAccount.byDebitAccounts;
+    }
+
+    if (isCreditAccountsChanged) {
+      updatedSyntheticAccount.byCreditAccounts = await this.resolveLinkedSyntheticAccounts(
+        byCreditAccountsIds
+      );
+    } else {
+      delete updatedSyntheticAccount.byCreditAccounts;
+    }
+
+    return isDebitAccountsChanged || isCreditAccountsChanged
+      ? await this.syntheticAccountsRepository.updateNestedEntity(
+          account,
+          updatedSyntheticAccount,
+          ['byDebitAccounts', 'byCreditAccounts']
+        )
+      : await this.syntheticAccountsRepository.updateEntity(
+          account,
+          updatedSyntheticAccount,
+          ['byDebitAccounts', 'byCreditAccounts']
+        );
   }
 
   async validateAccountNumberNotExist(number: number): Promise<void> {
