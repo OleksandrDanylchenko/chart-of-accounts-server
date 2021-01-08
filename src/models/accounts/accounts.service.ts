@@ -20,6 +20,13 @@ export class AccountsService {
     return await this.accountsRepository.get(id, relations, throwsException);
   }
 
+  async getAll(
+    relations: string[] = [],
+    throwsException = false
+  ): Promise<AccountEntity[] | null> {
+    return await this.accountsRepository.getAll(relations, throwsException);
+  }
+
   async create(inputs: CreateAccountDto): Promise<AccountEntity> {
     return await this.accountsRepository.createEntity(inputs);
   }

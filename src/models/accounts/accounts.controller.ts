@@ -21,7 +21,7 @@ export class AccountsController {
   @SerializeOptions({ groups: defaultAccountGroupsForSerializing })
   @UseInterceptors(ClassSerializerInterceptor)
   async get(): Promise<AccountEntity[]> {
-    return [];
+    return await this.accountsService.getAll();
   }
 
   @Get('/:id')
