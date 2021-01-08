@@ -149,4 +149,26 @@ export class SyntheticAccountsService {
 
     return resolvedSyntheticAccounts;
   }
+
+  async delete(entityId: string): Promise<SyntheticAccountEntity> {
+    const deletionEntity = await this.get(entityId, [
+      'byDebitAccounts',
+      'byCreditAccounts'
+    ]);
+    if (deletionEntity) {
+      const isCreditAccountsPopulated =
+        deletionEntity.byCreditAccounts.length > 0;
+      const isDebitAccountsPopulated =
+        deletionEntity.byCreditAccounts.length > 0;
+
+      if (isCreditAccountsPopulated || isDebitAccountsPopulated) {
+        await this.syntheticAccountsRepository.deleteEntity(deletionEntity);
+      } else {
+        await this.syntheticAccountsRepository.deleteNestedEntity(
+          deletionEntity
+        );
+      }
+    }
+    return deletionEntity;
+  }
 }

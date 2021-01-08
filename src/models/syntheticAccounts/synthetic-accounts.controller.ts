@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -18,6 +19,10 @@ import {
 } from './serializers/synthetic-account.serializer';
 import { EditSyntheticAccountDto } from './dtos/edit-synt-account.dto';
 import { CreateSyntheticAccountDto } from './dtos/create-synt-account.dto';
+import {
+  AccountEntity,
+  defaultAccountGroupsForSerializing
+} from '../accounts/serializers/account.serializer';
 
 @Controller('synthetic-accounts')
 export class SyntheticAccountsController {
@@ -89,5 +94,14 @@ export class SyntheticAccountsController {
   ): Promise<SyntheticAccountEntity> {
     const account = await this.syntheticAccountsService.get(id, [], true);
     return await this.syntheticAccountsService.update(account, inputs);
+  }
+
+  @Delete('/:id')
+  @SerializeOptions({ groups: defaultAccountGroupsForSerializing })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async delete(
+    @Param('id', ParseIntPipe) id: string
+  ): Promise<SyntheticAccountEntity> {
+    return await this.syntheticAccountsService.delete(id);
   }
 }
