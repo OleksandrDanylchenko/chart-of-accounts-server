@@ -2,6 +2,7 @@ import {
   Body,
   ClassSerializerInterceptor,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -52,5 +53,12 @@ export class AccountsController {
   ): Promise<AccountEntity> {
     const account = await this.accountsService.get(id, [], true);
     return await this.accountsService.update(account, inputs);
+  }
+
+  @Delete('/:id')
+  @SerializeOptions({ groups: defaultAccountGroupsForSerializing })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async delete(@Param('id', ParseIntPipe) id: string): Promise<AccountEntity> {
+    return await this.accountsService.delete(id);
   }
 }

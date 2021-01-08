@@ -54,4 +54,12 @@ export class AccountsService {
       );
     }
   }
+
+  async delete(entityId: string): Promise<AccountEntity> {
+    const deletionEntity = await this.get(entityId);
+    if (deletionEntity) {
+      await this.accountsRepository.deleteEntity(deletionEntity);
+    }
+    return deletionEntity;
+  }
 }

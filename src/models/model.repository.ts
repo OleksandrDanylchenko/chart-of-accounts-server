@@ -1,5 +1,5 @@
 import { plainToClass } from 'class-transformer';
-import { Repository, DeepPartial } from 'typeorm';
+import { Repository, DeepPartial, DeleteResult } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { ModelEntity } from '../common/serializers/model.serializer';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
@@ -55,6 +55,12 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
   ): Promise<K> {
     return this.update(entity.id, inputs)
       .then(async () => await this.getById(entity.id, relations))
+      .catch((error) => Promise.reject(error));
+  }
+
+  async deleteEntity(entity: K): Promise<DeleteResult> {
+    return this.delete(entity.id)
+      .then((deletionResult) => Promise.resolve(deletionResult))
       .catch((error) => Promise.reject(error));
   }
 
