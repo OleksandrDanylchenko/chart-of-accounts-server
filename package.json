@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "add-migration": "ts-node node_modules/typeorm/cli.js migration:generate -n AddUserEntity",
+    "add-migration": "ts-node node_modules/typeorm/cli.js migration:generate -n AddAccountsEntity",
     "migrate": "ts-node node_modules/typeorm/cli.js migration:run",
     "rollback-one": "ts-node node_modules/typeorm/cli.js migration:revert",
     "generate-seed": "ts-node node_modules/typeorm/cli.js migration:create -n NewSeed"
@@ -33,6 +33,7 @@
     "@nestjs/platform-express": "^7.6.5",
     "@nestjs/typeorm": "^7.1.5",
     "class-transformer": "^0.3.1",
+    "class-validator": "^0.12.2",
     "pg": "^8.5.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",

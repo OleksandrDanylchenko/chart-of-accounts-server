@@ -13,9 +13,7 @@ export const allUserGroupsForSerializing: string[] = [
 
 export class UserEntity extends ModelEntity implements IUser {
   id: string;
-
   email: string;
-
   name: null | string;
 
   @Expose({ groups: ['user.password'] })

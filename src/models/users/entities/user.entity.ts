@@ -11,6 +11,7 @@ import { IUser } from '../interfaces/user.interface';
 export class User implements IUser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
   @Column()
   email: string;
 

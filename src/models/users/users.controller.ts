@@ -15,7 +15,6 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { EditUserDto } from './dtos/edit-user.dto';
-import { EntityBeingQueried } from '../../common/decorators/database-queried.decorator';
 
 @Controller('users')
 @SerializeOptions({
@@ -24,11 +23,11 @@ import { EntityBeingQueried } from '../../common/decorators/database-queried.dec
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Get('/:id')
-  @UseInterceptors(ClassSerializerInterceptor)
-  async get(@EntityBeingQueried() user: UserEntity): Promise<UserEntity> {
-    return user;
-  }
+  // @Get('/:id')
+  // @UseInterceptors(ClassSerializerInterceptor)
+  // async get(@EntityBeingQueried() user: UserEntity): Promise<UserEntity> {
+  //   return user;
+  // }
 
   @Post('/')
   @UseInterceptors(ClassSerializerInterceptor)
@@ -36,12 +35,12 @@ export class UsersController {
     return await this.usersService.create(inputs);
   }
 
-  @Put('/:id')
-  @UseInterceptors(ClassSerializerInterceptor)
-  async update(
-    @EntityBeingQueried() user: UserEntity,
-    @Body() inputs: EditUserDto
-  ): Promise<UserEntity> {
-    return await this.usersService.update(user, inputs);
-  }
+  // @Put('/:id')
+  // @UseInterceptors(ClassSerializerInterceptor)
+  // async update(
+  //   @EntityBeingQueried() user: UserEntity,
+  //   @Body() inputs: EditUserDto
+  // ): Promise<UserEntity> {
+  //   return await this.usersService.update(user, inputs);
+  // }
 }
