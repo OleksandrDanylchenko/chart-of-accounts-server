@@ -97,10 +97,11 @@ export class SyntheticAccountsService {
   async resolveLinkedSyntheticAccounts(
     syntheticAccountsIds: number[]
   ): Promise<SyntheticAccount[]> {
+    const uniqueSyntheticAccountsIds = [...new Set(syntheticAccountsIds)];
     const resolvedSyntheticAccounts = [];
 
     await Promise.all(
-      syntheticAccountsIds.map(async (accountId) => {
+      uniqueSyntheticAccountsIds.map(async (accountId) => {
         const resolvedAccount = await this.syntheticAccountsRepository.getDatabaseEntityById(
           accountId.toString(),
           [],
