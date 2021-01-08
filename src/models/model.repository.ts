@@ -98,6 +98,13 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
       .catch((error) => Promise.reject(error));
   }
 
+  async deleteNestedEntity(entity: K): Promise<K> {
+    const dbEntity = await this.getDatabaseEntityById(entity.id);
+    return this.remove(dbEntity)
+      .then((entity) => Promise.resolve(entity ? this.transform(entity) : null))
+      .catch((error) => Promise.reject(error));
+  }
+
   transform(model: T, transformOptions = {}): K {
     return plainToClass(ModelEntity, model, transformOptions) as K;
   }
