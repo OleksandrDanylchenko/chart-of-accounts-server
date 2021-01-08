@@ -1,9 +1,12 @@
 import {
+  Body,
   ClassSerializerInterceptor,
   Controller,
   Get,
   Param,
   ParseIntPipe,
+  Post,
+  Put,
   SerializeOptions,
   UseInterceptors
 } from '@nestjs/common';
@@ -13,6 +16,8 @@ import {
   SyntheticAccountEntity,
   syntheticAccountWithLinkedSyntheticAccountsGroupsForSerializing
 } from './serializers/synthetic-account.serializer';
+import { EditSyntheticAccountDto } from './dtos/edit-synt-account.dto';
+import { CreateSyntheticAccountDto } from './dtos/create-synt-account.dto';
 
 @Controller('synthetic-accounts')
 export class SyntheticAccountsController {
@@ -60,5 +65,29 @@ export class SyntheticAccountsController {
       'byDebitAccounts',
       'byCreditAccounts'
     ]);
+  }
+
+  @Post('/')
+  @SerializeOptions({
+    groups: syntheticAccountWithLinkedSyntheticAccountsGroupsForSerializing
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async create(
+    @Body() inputs: CreateSyntheticAccountDto
+  ): Promise<SyntheticAccountEntity> {
+    return await this.syntheticAccountsService.create(inputs);
+  }
+
+  @Put('/:id')
+  @SerializeOptions({
+    groups: syntheticAccountWithLinkedSyntheticAccountsGroupsForSerializing
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async update(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() inputs: EditSyntheticAccountDto
+  ): Promise<SyntheticAccountEntity> {
+    const account = await this.syntheticAccountsService.get(id, [], true);
+    return await this.syntheticAccountsService.update(account, inputs);
   }
 }

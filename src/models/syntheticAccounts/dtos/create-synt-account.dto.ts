@@ -6,7 +6,7 @@ import {
   IsString
 } from 'class-validator';
 
-export class CreateSyncAccountDto {
+export class CreateSyntheticAccountDto {
   @IsInt()
   @IsPositive()
   number: number;
@@ -22,11 +22,6 @@ export class CreateSyncAccountDto {
   @IsInt()
   @IsPositive()
   accountId: number;
-
-  @IsArray()
-  @IsInt({ each: true })
-  @IsPositive({ each: true })
-  subAccountsIds: number[];
 
   @IsArray()
   @IsInt({ each: true })
