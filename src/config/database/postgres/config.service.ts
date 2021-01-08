@@ -4,7 +4,7 @@ import {
   getEnvArray,
   getPaths,
   getRuntimePaths
-} from '../../../common/utils/envParser.helper';
+} from '../../../common/utils/env-parser.helper';
 
 @Injectable()
 export class PostgresConfigService {

@@ -3,8 +3,10 @@ import {
   Column,
   Entity,
   Index,
+  OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm';
+import { SyntheticAccount } from '../../syntheticAccounts/entities/synthetic-account.entity';
 
 @Index('accounts_pkey', ['id'], { unique: true })
 @Entity('accounts')
@@ -20,4 +22,10 @@ export class Account extends BaseEntity {
 
   @Column({ type: 'text', name: 'description' })
   description: string;
+
+  @OneToMany(
+    () => SyntheticAccount,
+    (syntheticAccount) => syntheticAccount.account
+  )
+  syntheticAccounts: SyntheticAccount[];
 }

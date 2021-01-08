@@ -19,10 +19,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "add-migration": "ts-node node_modules/typeorm/cli.js migration:generate -n FixedTypeOfAccountNumber",
+    "add-migration": "ts-node node_modules/typeorm/cli.js migration:generate -n AddedSyntheticAccountEntity",
     "migrate": "ts-node node_modules/typeorm/cli.js migration:run",
     "rollback-one": "ts-node node_modules/typeorm/cli.js migration:revert",
-    "generate-seed": "ts-node node_modules/typeorm/cli.js migration:create -n RemovedUsersEntity"
+    "generate-seed": "ts-node node_modules/typeorm/cli.js migration:create -n NewMigration"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
