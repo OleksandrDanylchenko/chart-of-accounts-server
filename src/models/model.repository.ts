@@ -5,6 +5,27 @@ import { ModelEntity } from '../common/serializers/model.serializer';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
+  async getDatabaseEntityById(
+    id: string,
+    relations: string[] = [],
+    throwsException = false
+  ): Promise<T | null> {
+    return await this.findOne({
+      where: { id },
+      relations
+    })
+      .then((entity) => {
+        if (!entity && throwsException) {
+          return Promise.reject(
+            new NotFoundException(`Model not found. ID: ${id}`)
+          );
+        }
+
+        return Promise.resolve(entity);
+      })
+      .catch((error) => Promise.reject(error));
+  }
+
   async getById(
     id: string,
     relations: string[] = [],
@@ -16,7 +37,9 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
     })
       .then((entity) => {
         if (!entity && throwsException) {
-          return Promise.reject(new NotFoundException('Model not found.'));
+          return Promise.reject(
+            new NotFoundException(`Model not found. ID: ${id}`)
+          );
         }
 
         return Promise.resolve(entity ? this.transform(entity) : null);
