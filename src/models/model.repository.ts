@@ -5,7 +5,7 @@ import { ModelEntity } from '../common/serializers/model.serializer';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
-  async get(
+  async getById(
     id: string,
     relations: string[] = [],
     throwsException = false
@@ -44,7 +44,7 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
     relations: string[] = []
   ): Promise<K> {
     return this.save(inputs)
-      .then(async (entity) => await this.get((entity as any).id, relations))
+      .then(async (entity) => await this.getById((entity as any).id, relations))
       .catch((error) => Promise.reject(error));
   }
 
@@ -54,7 +54,7 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
     relations: string[] = []
   ): Promise<K> {
     return this.update(entity.id, inputs)
-      .then(async () => await this.get(entity.id, relations))
+      .then(async () => await this.getById(entity.id, relations))
       .catch((error) => Promise.reject(error));
   }
 

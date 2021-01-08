@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { AccountsRepository } from './accounts.repository';
 import { AccountEntity } from './serializers/account.serializer';
@@ -17,7 +17,11 @@ export class AccountsService {
     relations: string[] = [],
     throwsException = false
   ): Promise<AccountEntity | null> {
-    return await this.accountsRepository.get(id, relations, throwsException);
+    return await this.accountsRepository.getById(
+      id,
+      relations,
+      throwsException
+    );
   }
 
   async getAll(
@@ -28,6 +32,14 @@ export class AccountsService {
   }
 
   async create(inputs: CreateAccountDto): Promise<AccountEntity> {
+    const accountWithNumber = await this.accountsRepository.getByNumber(
+      inputs.number
+    );
+    if (accountWithNumber) {
+      throw new BadRequestException(
+        `Account with provided number "${inputs.number}" already exists!`
+      );
+    }
     return await this.accountsRepository.createEntity(inputs);
   }
 

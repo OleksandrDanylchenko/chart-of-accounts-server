@@ -1,9 +1,12 @@
 import {
+  Body,
   ClassSerializerInterceptor,
   Controller,
   Get,
   Param,
   ParseIntPipe,
+  Post,
+  Put,
   SerializeOptions,
   UseInterceptors
 } from '@nestjs/common';
@@ -12,6 +15,8 @@ import {
   defaultAccountGroupsForSerializing
 } from './serializers/account.serializer';
 import { AccountsService } from './accounts.service';
+import { CreateAccountDto } from './dtos/create-account.dto';
+import { EditAccountDto } from './dtos/edit-account.dto';
 
 @Controller('accounts')
 export class AccountsController {
@@ -31,25 +36,21 @@ export class AccountsController {
     return await this.accountsService.get(id);
   }
 
-  // @Get('/with-synthetic')
-  // @SerializeOptions({ groups: allAccountGroupsForSerializing })
-  // @UseInterceptors(ClassSerializerInterceptor)
-  // async getWithSynthetic(): Promise<AccountEntity[]> {
-  //   return [];
-  // }
+  @Post('/')
+  @SerializeOptions({ groups: defaultAccountGroupsForSerializing })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async create(@Body() inputs: CreateAccountDto): Promise<AccountEntity> {
+    return await this.accountsService.create(inputs);
+  }
 
-  // @Post('/')
-  // @UseInterceptors(ClassSerializerInterceptor)
-  // async create(@Body() inputs: CreateUserDto): Promise<UserEntity> {
-  //   return await this.usersService.create(inputs);
-  // }
-
-  // @Put('/:id')
-  // @UseInterceptors(ClassSerializerInterceptor)
-  // async update(
-  //   @EntityBeingQueried() user: UserEntity,
-  //   @Body() inputs: EditUserDto
-  // ): Promise<UserEntity> {
-  //   return await this.usersService.update(user, inputs);
-  // }
+  @Put('/:id')
+  @SerializeOptions({ groups: defaultAccountGroupsForSerializing })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async update(
+    @Param('id', ParseIntPipe) id: string,
+    @Body() inputs: EditAccountDto
+  ): Promise<AccountEntity> {
+    const account = await this.accountsService.get(id, [], true);
+    return await this.accountsService.update(account, inputs);
+  }
 }
