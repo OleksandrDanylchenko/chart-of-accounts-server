@@ -20,6 +20,7 @@ import { CreateSubAccountDto } from './dtos/create-sub-account.dto';
 import { EditSubAccountDto } from './dtos/edit-sub-account.dto';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -63,6 +64,7 @@ export class SubAccountsController {
     return await this.subAccountsService.get(id, [], true);
   }
 
+  @ApiBearerAuth()
   @Post('/')
   @ApiCreatedResponse({
     description: 'Newly created sub-account',
@@ -78,6 +80,7 @@ export class SubAccountsController {
     return await this.subAccountsService.create(inputs);
   }
 
+  @ApiBearerAuth()
   @Put('/:id')
   @ApiOkResponse({
     description: 'Updated sub-account',
@@ -97,6 +100,7 @@ export class SubAccountsController {
     return await this.subAccountsService.update(account, inputs);
   }
 
+  @ApiBearerAuth()
   @Delete('/:id')
   @ApiOkResponse({
     description: 'Deleted sub-account',

@@ -24,6 +24,7 @@ import { CreateSyntheticAccountDto } from './dtos/create-synt-account.dto';
 import { defaultAccountGroups } from '../accounts/serializers/account.serializer';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -195,6 +196,7 @@ export class SyntheticAccountsController {
     ]);
   }
 
+  @ApiBearerAuth()
   @Post('/')
   @ApiCreatedResponse({
     description: 'Newly created synthetic account',
@@ -215,6 +217,7 @@ export class SyntheticAccountsController {
     return await this.syntheticAccountsService.create(inputs);
   }
 
+  @ApiBearerAuth()
   @Put('/:id')
   @ApiCreatedResponse({
     description: 'Updated synthetic account',
@@ -237,6 +240,7 @@ export class SyntheticAccountsController {
     return await this.syntheticAccountsService.update(account, inputs);
   }
 
+  @ApiBearerAuth()
   @Delete('/:id')
   @ApiOkResponse({
     description: 'Deleted synthetic account',

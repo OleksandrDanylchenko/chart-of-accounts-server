@@ -18,6 +18,7 @@ async function bootstrap(): Promise<void> {
       'API for Ukrainian chart of accounts (https://zakon.rada.gov.ua/go/z0893-99)'
     )
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);

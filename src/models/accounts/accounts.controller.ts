@@ -21,6 +21,7 @@ import { CreateAccountDto } from './dtos/create-account.dto';
 import { EditAccountDto } from './dtos/edit-account.dto';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -96,6 +97,7 @@ export class AccountsController {
     return await this.accountsService.get(id, ['syntheticAccounts'], true);
   }
 
+  @ApiBearerAuth()
   @Post('/')
   @ApiCreatedResponse({
     description: 'Newly created account',
@@ -112,6 +114,7 @@ export class AccountsController {
     return await this.accountsService.create(inputs);
   }
 
+  @ApiBearerAuth()
   @Put('/:id')
   @ApiOkResponse({
     description: 'Updated account',
@@ -132,6 +135,7 @@ export class AccountsController {
     return await this.accountsService.update(account, inputs);
   }
 
+  @ApiBearerAuth()
   @Delete('/:id')
   @ApiOkResponse({
     description: 'Deleted account',
