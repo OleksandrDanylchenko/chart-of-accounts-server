@@ -11,7 +11,7 @@ import {
   numberField,
   syntheticAccountIdField,
   titleField
-} from './swagger-descriptors';
+} from '../documents/swagger-descriptors';
 
 export class EditSubAccountDto {
   @ApiPropertyOptional(numberField)

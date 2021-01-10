@@ -8,7 +8,7 @@ import {
   numberField,
   syntheticAccountsField,
   titleField
-} from '../dtos/swagger-descriptors';
+} from '../documents/swagger-descriptors';
 import { ApiResponseModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 
 export const defaultAccountGroups: string[] = [];

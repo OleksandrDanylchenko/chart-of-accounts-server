@@ -25,7 +25,6 @@ import {
   ApiOkResponse,
   ApiTags
 } from '@nestjs/swagger';
-import { AccountEntity } from '../accounts/serializers/account.serializer';
 import { ApiResponseError } from '../../common/errors/api-error.schema';
 
 @Controller('sub-accounts')

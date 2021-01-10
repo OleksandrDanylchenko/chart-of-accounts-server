@@ -8,7 +8,7 @@ import {
   numberField,
   syntheticAccountIdField,
   titleField
-} from '../dtos/swagger-descriptors';
+} from '../documents/swagger-descriptors';
 
 export const defaultSubAccountGroups: string[] = [];
 export const allSubAccountGroups: string[] = [...defaultSubAccountGroups];

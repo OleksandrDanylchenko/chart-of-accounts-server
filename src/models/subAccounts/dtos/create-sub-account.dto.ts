@@ -5,7 +5,7 @@ import {
   numberField,
   syntheticAccountIdField,
   titleField
-} from './swagger-descriptors';
+} from '../documents/swagger-descriptors';
 
 export class CreateSubAccountDto {
   @ApiProperty(numberField)

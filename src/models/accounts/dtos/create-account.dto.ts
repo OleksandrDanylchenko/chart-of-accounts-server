@@ -4,7 +4,7 @@ import {
   descriptionField,
   numberField,
   titleField
-} from './swagger-descriptors';
+} from '../documents/swagger-descriptors';
 
 export class CreateAccountDto {
   @ApiProperty(numberField)
