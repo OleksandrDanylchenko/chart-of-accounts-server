@@ -87,9 +87,6 @@ export class SyntheticAccountsService {
 
     const isDebitAccountsChanged =
       byDebitAccountsIds && byDebitAccountsIds.length > 0;
-    const isCreditAccountsChanged =
-      byCreditAccountsIds && byCreditAccountsIds.length > 0;
-
     if (isDebitAccountsChanged) {
       updatedSyntheticAccount.byDebitAccounts = await this.resolveLinkedSyntheticAccounts(
         byDebitAccountsIds
@@ -98,6 +95,8 @@ export class SyntheticAccountsService {
       delete updatedSyntheticAccount.byDebitAccounts;
     }
 
+    const isCreditAccountsChanged =
+      byCreditAccountsIds && byCreditAccountsIds.length > 0;
     if (isCreditAccountsChanged) {
       updatedSyntheticAccount.byCreditAccounts = await this.resolveLinkedSyntheticAccounts(
         byCreditAccountsIds
@@ -162,11 +161,11 @@ export class SyntheticAccountsService {
         deletionEntity.byCreditAccounts.length > 0;
 
       if (isCreditAccountsPopulated || isDebitAccountsPopulated) {
-        await this.syntheticAccountsRepository.deleteEntity(deletionEntity);
-      } else {
         await this.syntheticAccountsRepository.deleteNestedEntity(
           deletionEntity
         );
+      } else {
+        await this.syntheticAccountsRepository.deleteEntity(deletionEntity);
       }
     }
     return deletionEntity;
