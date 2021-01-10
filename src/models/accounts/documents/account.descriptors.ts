@@ -1,4 +1,4 @@
-import { OmitType } from '@nestjs/swagger';
+import { IntersectionType, OmitType, PickType } from '@nestjs/swagger';
 import { AccountEntity } from '../serializers/account.serializer';
 import { ApiResponseModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
 import { ISyntheticAccount } from '../../syntheticAccounts/interfaces/synthetic-account.interface';
@@ -26,19 +26,10 @@ export class AtomicAccount extends OmitType(AccountEntity, [
   description: string;
 }
 
-export class AccountWithSyntheticAccounts extends AccountEntity {
-  @ApiResponseModelProperty(idField)
-  id: string;
-
-  @ApiResponseModelProperty(numberField)
-  number: number;
-
-  @ApiResponseModelProperty(titleField)
-  title: string;
-
-  @ApiResponseModelProperty(descriptionField)
-  description: string;
-
+export class AccountWithSyntheticAccounts extends IntersectionType(
+  AtomicAccount,
+  PickType(AccountEntity, ['syntheticAccounts'] as const)
+) {
   @ApiResponseModelProperty(syntheticAccountsField)
   syntheticAccounts: ISyntheticAccount[];
 }
