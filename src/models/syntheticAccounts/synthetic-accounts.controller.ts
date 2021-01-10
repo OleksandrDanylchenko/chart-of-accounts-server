@@ -47,7 +47,7 @@ export class SyntheticAccountsController {
   @Get('/')
   @ApiOkResponse({
     description: 'List of synthetic accounts',
-    type: [SyntheticAccountEntity]
+    type: [AtomicSyntheticAccount]
   })
   @SerializeOptions({ groups: defaultSyntheticAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
@@ -58,7 +58,7 @@ export class SyntheticAccountsController {
   @Get('/single/:id')
   @ApiOkResponse({
     description: 'Synthetic account with provided id',
-    type: SyntheticAccountEntity
+    type: AtomicSyntheticAccount
   })
   @ApiNotFoundResponse({
     description: "Synthetic account with provided id hasn't been found",
