@@ -16,7 +16,8 @@ import {
   defaultSyntheticAccountGroups,
   SyntheticAccountEntity,
   syntAccountWithLinkedSyntAccountsGroups,
-  syntAccountWithSubAccountsGroups
+  syntAccountWithSubAccountsGroups,
+  syntAccountWithLinkedSyntAccountsAndSubAccountsGroups
 } from './serializers/synthetic-account.serializer';
 import { EditSyntheticAccountDto } from './dtos/edit-synt-account.dto';
 import { CreateSyntheticAccountDto } from './dtos/create-synt-account.dto';
@@ -88,6 +89,34 @@ export class SyntheticAccountsController {
     @Param('id', ParseIntPipe) id: string
   ): Promise<SyntheticAccountEntity> {
     return await this.syntheticAccountsService.get(id, ['subAccounts']);
+  }
+
+  @Get('/with-sub-linked')
+  @SerializeOptions({
+    groups: syntAccountWithLinkedSyntAccountsAndSubAccountsGroups
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getWithSubAndLinked(): Promise<SyntheticAccountEntity[]> {
+    return await this.syntheticAccountsService.getAll([
+      'subAccounts',
+      'byDebitAccounts',
+      'byCreditAccounts'
+    ]);
+  }
+
+  @Get('/with-sub-linked/single/:id')
+  @SerializeOptions({
+    groups: syntAccountWithLinkedSyntAccountsAndSubAccountsGroups
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getWithSubAndLinkedById(
+    @Param('id', ParseIntPipe) id: string
+  ): Promise<SyntheticAccountEntity> {
+    return await this.syntheticAccountsService.get(id, [
+      'subAccounts',
+      'byDebitAccounts',
+      'byCreditAccounts'
+    ]);
   }
 
   @Post('/')
