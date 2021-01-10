@@ -10,8 +10,10 @@ async function bootstrap(): Promise<void> {
   app.useGlobalPipes(new ValidationPipe());
 
   const options = new DocumentBuilder()
-    .setTitle('Chart of accounts example')
-    .setDescription('API for Ukrainian chart of accounts')
+    .setTitle('Chart of accounts')
+    .setDescription(
+      'API for Ukrainian chart of accounts (https://zakon.rada.gov.ua/go/z0893-99)'
+    )
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, options);
