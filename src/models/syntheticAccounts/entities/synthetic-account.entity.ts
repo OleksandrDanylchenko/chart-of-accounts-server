@@ -7,9 +7,11 @@ import {
   JoinTable,
   ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn
 } from 'typeorm';
 import { Account } from '../../accounts/entities/account.entity';
+import { SubAccount } from '../../subAccounts/entities/sub-account.entity';
 
 @Index('synthetic_accounts_pkey', ['id'], { unique: true })
 @Entity('synthetic_accounts')
@@ -32,6 +34,9 @@ export class SyntheticAccount extends BaseEntity {
   @ManyToOne(() => Account, (account) => account.syntheticAccounts)
   @JoinColumn([{ name: 'account_id', referencedColumnName: 'id' }])
   account: Account;
+
+  @OneToMany(() => SubAccount, (subAccount) => subAccount.syntheticAccount)
+  subAccounts: SubAccount[];
 
   @ManyToMany(() => SyntheticAccount)
   @JoinTable()
