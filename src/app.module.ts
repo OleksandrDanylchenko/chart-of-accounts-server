@@ -7,6 +7,8 @@ import { SyntheticAccountsModule } from './models/syntheticAccounts/synthetic-ac
 import { SubAccountsModule } from './models/subAccounts/sub-accounts.module';
 import { AuthModule } from './authentication/auth.module';
 import { AuthConfigModule } from './config/authentication/config.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './authentication/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -20,6 +22,11 @@ import { AuthConfigModule } from './config/authentication/config.module';
     SubAccountsModule
   ],
   controllers: [],
-  providers: []
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard
+    }
+  ]
 })
 export class AppModule {}
