@@ -13,8 +13,8 @@ import {
 } from '@nestjs/common';
 import {
   AccountEntity,
-  accountGroupsWithSyntheticForSerializing,
-  defaultAccountGroupsForSerializing
+  accountGroupsWithSynthetic,
+  defaultAccountGroups
 } from './serializers/account.serializer';
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dtos/create-account.dto';
@@ -25,28 +25,28 @@ export class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
   @Get('/')
-  @SerializeOptions({ groups: defaultAccountGroupsForSerializing })
+  @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
   async get(): Promise<AccountEntity[]> {
     return await this.accountsService.getAll();
   }
 
   @Get('/single/:id')
-  @SerializeOptions({ groups: defaultAccountGroupsForSerializing })
+  @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
   async getById(@Param('id', ParseIntPipe) id: string): Promise<AccountEntity> {
     return await this.accountsService.get(id);
   }
 
   @Get('/with-synthetic')
-  @SerializeOptions({ groups: accountGroupsWithSyntheticForSerializing })
+  @SerializeOptions({ groups: accountGroupsWithSynthetic })
   @UseInterceptors(ClassSerializerInterceptor)
   async getWithSynthetic(): Promise<AccountEntity[]> {
     return await this.accountsService.getAll(['syntheticAccounts']);
   }
 
   @Get('/with-synthetic/single/:id')
-  @SerializeOptions({ groups: accountGroupsWithSyntheticForSerializing })
+  @SerializeOptions({ groups: accountGroupsWithSynthetic })
   @UseInterceptors(ClassSerializerInterceptor)
   async getWithSyntheticById(
     @Param('id', ParseIntPipe) id: string
@@ -55,14 +55,14 @@ export class AccountsController {
   }
 
   @Post('/')
-  @SerializeOptions({ groups: defaultAccountGroupsForSerializing })
+  @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
   async create(@Body() inputs: CreateAccountDto): Promise<AccountEntity> {
     return await this.accountsService.create(inputs);
   }
 
   @Put('/:id')
-  @SerializeOptions({ groups: defaultAccountGroupsForSerializing })
+  @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
   async update(
     @Param('id', ParseIntPipe) id: string,
@@ -73,7 +73,7 @@ export class AccountsController {
   }
 
   @Delete('/:id')
-  @SerializeOptions({ groups: defaultAccountGroupsForSerializing })
+  @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
   async delete(@Param('id', ParseIntPipe) id: string): Promise<AccountEntity> {
     return await this.accountsService.delete(id);

@@ -3,7 +3,7 @@ import { ModelRepository } from '../model.repository';
 import { classToPlain, plainToClass } from 'class-transformer';
 import { SyntheticAccount } from './entities/synthetic-account.entity';
 import {
-  allSyntheticAccountGroupsForSerializing,
+  allSyntheticAccountGroups,
   SyntheticAccountEntity
 } from './serializers/synthetic-account.serializer';
 
@@ -19,7 +19,7 @@ export class SyntheticAccountsRepository extends ModelRepository<
 
   transform(model: SyntheticAccount): SyntheticAccountEntity {
     const transformOptions = {
-      groups: allSyntheticAccountGroupsForSerializing
+      groups: allSyntheticAccountGroups
     };
     return plainToClass(
       SyntheticAccountEntity,

@@ -3,14 +3,12 @@ import { ModelEntity } from '../../../common/serializers/model.serializer';
 import { IAccount } from '../interfaces/account.interface';
 import { ISyntheticAccount } from '../../syntheticAccounts/interfaces/synthetic-account.interface';
 
-export const defaultAccountGroupsForSerializing: string[] = [];
-export const accountGroupsWithSyntheticForSerializing: string[] = [
-  ...defaultAccountGroupsForSerializing,
+export const defaultAccountGroups: string[] = [];
+export const accountGroupsWithSynthetic: string[] = [
+  ...defaultAccountGroups,
   'account.linkedSyntheticAccounts'
 ];
-export const allAccountGroupsForSerializing: string[] = [
-  ...accountGroupsWithSyntheticForSerializing
-];
+export const allAccountGroups: string[] = [...accountGroupsWithSynthetic];
 
 export class AccountEntity extends ModelEntity implements IAccount {
   @Expose()

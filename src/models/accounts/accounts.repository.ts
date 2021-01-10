@@ -3,7 +3,7 @@ import { Account } from './entities/account.entity';
 import { ModelRepository } from '../model.repository';
 import {
   AccountEntity,
-  allAccountGroupsForSerializing
+  allAccountGroups
 } from './serializers/account.serializer';
 import { classToPlain, plainToClass } from 'class-transformer';
 
@@ -19,7 +19,7 @@ export class AccountsRepository extends ModelRepository<
 
   transform(model: Account): AccountEntity {
     const transformOptions = {
-      groups: allAccountGroupsForSerializing
+      groups: allAccountGroups
     };
     return plainToClass(
       AccountEntity,

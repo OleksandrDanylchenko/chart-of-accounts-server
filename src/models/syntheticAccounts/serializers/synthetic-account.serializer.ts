@@ -2,13 +2,13 @@ import { Expose } from 'class-transformer';
 import { ModelEntity } from '../../../common/serializers/model.serializer';
 import { ISyntheticAccount } from '../interfaces/synthetic-account.interface';
 
-export const defaultSyntheticAccountGroupsForSerializing: string[] = [];
-export const syntheticAccountWithLinkedSyntheticAccountsGroupsForSerializing: string[] = [
-  ...defaultSyntheticAccountGroupsForSerializing,
+export const defaultSyntheticAccountGroups: string[] = [];
+export const syntheticAccountWithLinkedSyntheticAccountsGroups: string[] = [
+  ...defaultSyntheticAccountGroups,
   'syntheticAccount.linkedSyntheticAccounts'
 ];
-export const allSyntheticAccountGroupsForSerializing: string[] = [
-  ...syntheticAccountWithLinkedSyntheticAccountsGroupsForSerializing
+export const allSyntheticAccountGroups: string[] = [
+  ...syntheticAccountWithLinkedSyntheticAccountsGroups
 ];
 
 export class SyntheticAccountEntity

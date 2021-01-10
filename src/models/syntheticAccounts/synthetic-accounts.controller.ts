@@ -13,16 +13,13 @@ import {
 } from '@nestjs/common';
 import { SyntheticAccountsService } from './synthetic-accounts.service';
 import {
-  defaultSyntheticAccountGroupsForSerializing,
+  defaultSyntheticAccountGroups,
   SyntheticAccountEntity,
-  syntheticAccountWithLinkedSyntheticAccountsGroupsForSerializing
+  syntheticAccountWithLinkedSyntheticAccountsGroups
 } from './serializers/synthetic-account.serializer';
 import { EditSyntheticAccountDto } from './dtos/edit-synt-account.dto';
 import { CreateSyntheticAccountDto } from './dtos/create-synt-account.dto';
-import {
-  AccountEntity,
-  defaultAccountGroupsForSerializing
-} from '../accounts/serializers/account.serializer';
+import { defaultAccountGroups } from '../accounts/serializers/account.serializer';
 
 @Controller('synthetic-accounts')
 export class SyntheticAccountsController {
@@ -31,14 +28,14 @@ export class SyntheticAccountsController {
   ) {}
 
   @Get('/')
-  @SerializeOptions({ groups: defaultSyntheticAccountGroupsForSerializing })
+  @SerializeOptions({ groups: defaultSyntheticAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
   async get(): Promise<SyntheticAccountEntity[]> {
     return await this.syntheticAccountsService.getAll();
   }
 
   @Get('/single/:id')
-  @SerializeOptions({ groups: defaultSyntheticAccountGroupsForSerializing })
+  @SerializeOptions({ groups: defaultSyntheticAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
   async getById(
     @Param('id', ParseIntPipe) id: string
@@ -48,7 +45,7 @@ export class SyntheticAccountsController {
 
   @Get('/with-linked')
   @SerializeOptions({
-    groups: syntheticAccountWithLinkedSyntheticAccountsGroupsForSerializing
+    groups: syntheticAccountWithLinkedSyntheticAccountsGroups
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async getWithLinked(): Promise<SyntheticAccountEntity[]> {
@@ -60,7 +57,7 @@ export class SyntheticAccountsController {
 
   @Get('/with-linked/single/:id')
   @SerializeOptions({
-    groups: syntheticAccountWithLinkedSyntheticAccountsGroupsForSerializing
+    groups: syntheticAccountWithLinkedSyntheticAccountsGroups
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async getWithLinkedById(
@@ -74,7 +71,7 @@ export class SyntheticAccountsController {
 
   @Post('/')
   @SerializeOptions({
-    groups: syntheticAccountWithLinkedSyntheticAccountsGroupsForSerializing
+    groups: syntheticAccountWithLinkedSyntheticAccountsGroups
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async create(
@@ -85,7 +82,7 @@ export class SyntheticAccountsController {
 
   @Put('/:id')
   @SerializeOptions({
-    groups: syntheticAccountWithLinkedSyntheticAccountsGroupsForSerializing
+    groups: syntheticAccountWithLinkedSyntheticAccountsGroups
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async update(
@@ -97,7 +94,7 @@ export class SyntheticAccountsController {
   }
 
   @Delete('/:id')
-  @SerializeOptions({ groups: defaultAccountGroupsForSerializing })
+  @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
   async delete(
     @Param('id', ParseIntPipe) id: string
