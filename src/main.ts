@@ -13,7 +13,6 @@ async function bootstrap(): Promise<void> {
     .setTitle('Chart of accounts example')
     .setDescription('API for Ukrainian chart of accounts')
     .setVersion('1.0')
-    .addTag('chart-of-accounts')
     .build();
   const document = SwaggerModule.createDocument(app, options);
   SwaggerModule.setup('api', app, document);
