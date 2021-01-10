@@ -13,7 +13,7 @@ import {
   descriptionField,
   numberField,
   titleField
-} from '../documentation/swagger-descriptors';
+} from '../documentation/synthetic-account-fields.descriptors';
 
 export class CreateSyntheticAccountDto {
   @ApiProperty(numberField)

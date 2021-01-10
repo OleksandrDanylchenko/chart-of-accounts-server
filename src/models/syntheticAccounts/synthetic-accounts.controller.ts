@@ -30,6 +30,12 @@ import {
   ApiTags
 } from '@nestjs/swagger';
 import { ApiResponseError } from '../../common/errors/api-error.schema';
+import {
+  AtomicSyntheticAccount,
+  SyntheticAccountWithLinkedSyntAccounts,
+  SyntheticAccountWithSubAccounts,
+  SyntheticAccountWithSubAccountsAndLinkedSyntAccounts
+} from './documentation/synthetic-account.descriptors';
 
 @Controller('synthetic-accounts')
 @ApiTags('synthetic-accounts')
@@ -70,7 +76,7 @@ export class SyntheticAccountsController {
   @ApiOkResponse({
     description:
       'List of synthetic accounts with linked by debit and credit synthetic accounts',
-    type: [SyntheticAccountEntity]
+    type: [SyntheticAccountWithLinkedSyntAccounts]
   })
   @SerializeOptions({
     groups: syntAccountWithLinkedSyntAccountsGroups
@@ -87,7 +93,7 @@ export class SyntheticAccountsController {
   @ApiOkResponse({
     description:
       'Synthetic account with provided id and linked by debit and credit synthetic accounts',
-    type: SyntheticAccountEntity
+    type: SyntheticAccountWithLinkedSyntAccounts
   })
   @ApiNotFoundResponse({
     description: "Synthetic account with provided id hasn't been found",
@@ -109,7 +115,7 @@ export class SyntheticAccountsController {
   @Get('/with-sub')
   @ApiOkResponse({
     description: 'List of synthetic accounts with linked sub-accounts',
-    type: [SyntheticAccountEntity]
+    type: [SyntheticAccountWithSubAccounts]
   })
   @SerializeOptions({
     groups: syntAccountWithSubAccountsGroups
@@ -122,7 +128,7 @@ export class SyntheticAccountsController {
   @Get('/with-sub/single/:id')
   @ApiOkResponse({
     description: 'Synthetic account with provided id and linked sub-accounts',
-    type: SyntheticAccountEntity
+    type: SyntheticAccountWithSubAccounts
   })
   @ApiNotFoundResponse({
     description: "Synthetic account with provided id hasn't been found",
@@ -142,7 +148,7 @@ export class SyntheticAccountsController {
   @ApiOkResponse({
     description:
       'List of synthetic accounts with linked sub-accounts and linked by debit and credit synthetic accounts',
-    type: [SyntheticAccountEntity]
+    type: [SyntheticAccountWithSubAccountsAndLinkedSyntAccounts]
   })
   @SerializeOptions({
     groups: syntAccountWithLinkedSyntAccountsAndSubAccountsGroups
@@ -160,7 +166,7 @@ export class SyntheticAccountsController {
   @ApiOkResponse({
     description:
       'Synthetic account with linked sub-accounts and linked by debit and credit synthetic accounts',
-    type: SyntheticAccountEntity
+    type: SyntheticAccountWithSubAccountsAndLinkedSyntAccounts
   })
   @ApiNotFoundResponse({
     description: "Synthetic account with provided id hasn't been found",
@@ -183,7 +189,7 @@ export class SyntheticAccountsController {
   @Post('/')
   @ApiCreatedResponse({
     description: 'Newly created synthetic account',
-    type: SyntheticAccountEntity
+    type: AtomicSyntheticAccount
   })
   @ApiBadRequestResponse({
     description:
@@ -203,7 +209,7 @@ export class SyntheticAccountsController {
   @Put('/:id')
   @ApiCreatedResponse({
     description: 'Updated synthetic account',
-    type: SyntheticAccountEntity
+    type: AtomicSyntheticAccount
   })
   @ApiBadRequestResponse({
     description:
@@ -225,7 +231,7 @@ export class SyntheticAccountsController {
   @Delete('/:id')
   @ApiOkResponse({
     description: 'Deleted synthetic account',
-    type: SyntheticAccountEntity
+    type: AtomicSyntheticAccount
   })
   @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)

@@ -1,6 +1,6 @@
 import { ApiPropertyOptions } from '@nestjs/swagger';
-import { SyntheticAccountEntity } from '../serializers/synthetic-account.serializer';
-import { SubAccountEntity } from '../../subAccounts/serializers/sub-account.serializer';
+import { AtomicSubAccount } from '../../subAccounts/documents/sub-account.descriptors';
+import { AtomicSyntheticAccount } from './synthetic-account.descriptors';
 
 export const idField: ApiPropertyOptions = {
   description: 'ID of the synthetic account',
@@ -40,7 +40,7 @@ export const accountIdField: ApiPropertyOptions = {
 export const subAccountsField: ApiPropertyOptions = {
   description: 'List of linked sub-accounts',
   required: false,
-  type: [SubAccountEntity]
+  type: [AtomicSubAccount]
 };
 
 export const byDebitAccountsIdsField: ApiPropertyOptions = {
@@ -52,7 +52,7 @@ export const byDebitAccountsIdsField: ApiPropertyOptions = {
 export const byDebitAccountsField: ApiPropertyOptions = {
   description: 'Linked by debit synthetic accounts',
   required: false,
-  type: () => SyntheticAccountEntity,
+  type: () => AtomicSyntheticAccount,
   isArray: true
 };
 
@@ -65,6 +65,6 @@ export const byCreditAccountsIdsField: ApiPropertyOptions = {
 export const byCreditAccountsField: ApiPropertyOptions = {
   description: 'Linked by credit synthetic accounts',
   required: false,
-  type: () => SyntheticAccountEntity,
+  type: () => AtomicSyntheticAccount,
   isArray: true
 };
