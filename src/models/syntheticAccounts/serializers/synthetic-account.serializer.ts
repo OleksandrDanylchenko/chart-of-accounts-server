@@ -1,14 +1,23 @@
 import { Expose } from 'class-transformer';
 import { ModelEntity } from '../../../common/serializers/model.serializer';
 import { ISyntheticAccount } from '../interfaces/synthetic-account.interface';
+import { ISubAccount } from '../../subAccounts/interfaces/sub-account.interface';
 
 export const defaultSyntheticAccountGroups: string[] = [];
-export const syntheticAccountWithLinkedSyntheticAccountsGroups: string[] = [
+export const syntAccountWithLinkedSyntAccountsGroups: string[] = [
   ...defaultSyntheticAccountGroups,
   'syntheticAccount.linkedSyntheticAccounts'
 ];
+export const syntAccountWithSubAccountsGroups: string[] = [
+  ...defaultSyntheticAccountGroups,
+  'syntheticAccount.subAccounts'
+];
+export const syntAccountWithLinkedSyntAccountsAndSubAccountsGroups: string[] = [
+  ...syntAccountWithLinkedSyntAccountsGroups,
+  ...syntAccountWithSubAccountsGroups
+];
 export const allSyntheticAccountGroups: string[] = [
-  ...syntheticAccountWithLinkedSyntheticAccountsGroups
+  ...syntAccountWithLinkedSyntAccountsAndSubAccountsGroups
 ];
 
 export class SyntheticAccountEntity
@@ -28,6 +37,9 @@ export class SyntheticAccountEntity
 
   @Expose()
   accountId: number;
+
+  @Expose({ groups: ['syntheticAccount.subAccounts'] })
+  subAccounts: ISubAccount[];
 
   @Expose({ groups: ['syntheticAccount.linkedSyntheticAccounts'] })
   byDebitAccounts: ISyntheticAccount[];

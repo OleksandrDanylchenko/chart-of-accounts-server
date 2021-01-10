@@ -15,7 +15,8 @@ import { SyntheticAccountsService } from './synthetic-accounts.service';
 import {
   defaultSyntheticAccountGroups,
   SyntheticAccountEntity,
-  syntheticAccountWithLinkedSyntheticAccountsGroups
+  syntAccountWithLinkedSyntAccountsGroups,
+  syntAccountWithSubAccountsGroups
 } from './serializers/synthetic-account.serializer';
 import { EditSyntheticAccountDto } from './dtos/edit-synt-account.dto';
 import { CreateSyntheticAccountDto } from './dtos/create-synt-account.dto';
@@ -45,7 +46,7 @@ export class SyntheticAccountsController {
 
   @Get('/with-linked')
   @SerializeOptions({
-    groups: syntheticAccountWithLinkedSyntheticAccountsGroups
+    groups: syntAccountWithLinkedSyntAccountsGroups
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async getWithLinked(): Promise<SyntheticAccountEntity[]> {
@@ -57,7 +58,7 @@ export class SyntheticAccountsController {
 
   @Get('/with-linked/single/:id')
   @SerializeOptions({
-    groups: syntheticAccountWithLinkedSyntheticAccountsGroups
+    groups: syntAccountWithLinkedSyntAccountsGroups
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async getWithLinkedById(
@@ -69,9 +70,29 @@ export class SyntheticAccountsController {
     ]);
   }
 
+  @Get('/with-sub')
+  @SerializeOptions({
+    groups: syntAccountWithSubAccountsGroups
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getWithSub(): Promise<SyntheticAccountEntity[]> {
+    return await this.syntheticAccountsService.getAll(['subAccounts']);
+  }
+
+  @Get('/with-sub/single/:id')
+  @SerializeOptions({
+    groups: syntAccountWithSubAccountsGroups
+  })
+  @UseInterceptors(ClassSerializerInterceptor)
+  async getWithSubById(
+    @Param('id', ParseIntPipe) id: string
+  ): Promise<SyntheticAccountEntity> {
+    return await this.syntheticAccountsService.get(id, ['subAccounts']);
+  }
+
   @Post('/')
   @SerializeOptions({
-    groups: syntheticAccountWithLinkedSyntheticAccountsGroups
+    groups: syntAccountWithLinkedSyntAccountsGroups
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async create(
@@ -82,7 +103,7 @@ export class SyntheticAccountsController {
 
   @Put('/:id')
   @SerializeOptions({
-    groups: syntheticAccountWithLinkedSyntheticAccountsGroups
+    groups: syntAccountWithLinkedSyntAccountsGroups
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async update(
