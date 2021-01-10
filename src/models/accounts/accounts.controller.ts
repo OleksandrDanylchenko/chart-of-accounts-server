@@ -30,7 +30,7 @@ import { ApiResponseError } from '../../common/errors/api-error.schema';
 import {
   AccountWithSyntheticAccounts,
   AtomicAccount
-} from './documents/accounts.descriptors';
+} from './documents/account.descriptors';
 
 @Controller('accounts')
 @ApiTags('accounts')

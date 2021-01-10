@@ -1,5 +1,5 @@
-import { SyntheticAccountEntity } from '../../syntheticAccounts/serializers/synthetic-account.serializer';
 import { ApiPropertyOptions } from '@nestjs/swagger';
+import { AtomicSyntheticAccount } from '../../syntheticAccounts/documentation/synthetic-account.descriptors';
 
 export const idField: ApiPropertyOptions = {
   description: 'ID of the account',
@@ -32,5 +32,5 @@ export const descriptionField: ApiPropertyOptions = {
 export const syntheticAccountsField: ApiPropertyOptions = {
   description: 'List of linked synthetic accounts',
   required: false,
-  type: [SyntheticAccountEntity]
+  type: [AtomicSyntheticAccount]
 };

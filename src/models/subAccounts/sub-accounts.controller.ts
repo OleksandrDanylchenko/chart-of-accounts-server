@@ -26,6 +26,7 @@ import {
   ApiTags
 } from '@nestjs/swagger';
 import { ApiResponseError } from '../../common/errors/api-error.schema';
+import { AtomicSubAccount } from './documents/sub-account.descriptors';
 
 @Controller('sub-accounts')
 @ApiTags('sub-accounts')
@@ -36,7 +37,7 @@ export class SubAccountsController {
   @Get('/')
   @ApiOkResponse({
     description: 'List of sub-accounts',
-    type: [SubAccountEntity]
+    type: [AtomicSubAccount]
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async get(): Promise<SubAccountEntity[]> {
@@ -46,7 +47,7 @@ export class SubAccountsController {
   @Get('/single/:id')
   @ApiOkResponse({
     description: 'Sub-account with provided id',
-    type: SubAccountEntity
+    type: AtomicSubAccount
   })
   @ApiNotFoundResponse({
     description: "Sub-account with provided id hasn't been found",
@@ -62,7 +63,7 @@ export class SubAccountsController {
   @Post('/')
   @ApiCreatedResponse({
     description: 'Newly created sub-account',
-    type: SubAccountEntity
+    type: AtomicSubAccount
   })
   @ApiBadRequestResponse({
     description:
@@ -77,7 +78,7 @@ export class SubAccountsController {
   @Put('/:id')
   @ApiOkResponse({
     description: 'Updated sub-account',
-    type: SubAccountEntity
+    type: AtomicSubAccount
   })
   @ApiBadRequestResponse({
     description:
@@ -96,7 +97,7 @@ export class SubAccountsController {
   @Delete('/:id')
   @ApiOkResponse({
     description: 'Deleted sub-account',
-    type: SubAccountEntity
+    type: AtomicSubAccount
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async delete(

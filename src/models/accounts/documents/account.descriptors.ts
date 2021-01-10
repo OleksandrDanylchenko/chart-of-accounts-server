@@ -26,9 +26,7 @@ export class AtomicAccount extends OmitType(AccountEntity, [
   description: string;
 }
 
-export class AccountWithSyntheticAccounts extends OmitType(AccountEntity, [
-  'syntheticAccounts'
-] as const) {
+export class AccountWithSyntheticAccounts extends AccountEntity {
   @ApiResponseModelProperty(idField)
   id: string;
 
