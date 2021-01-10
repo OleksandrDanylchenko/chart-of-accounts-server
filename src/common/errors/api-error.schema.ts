@@ -4,8 +4,7 @@ import { ApiPropertyOptions } from '@nestjs/swagger';
 
 const statusCodeField: ApiPropertyOptions = {
   description: 'Error status code',
-  enumName: 'Status codes',
-  enum: [404, 400]
+  type: Number
 };
 
 const messageField: ApiPropertyOptions = {
@@ -14,8 +13,7 @@ const messageField: ApiPropertyOptions = {
 
 const errorField: ApiPropertyOptions = {
   description: 'Stringified error status code',
-  enumName: 'Status codes',
-  enum: ['Not Found', 'Bad Request']
+  type: Number
 };
 
 export class ApiResponseError {
