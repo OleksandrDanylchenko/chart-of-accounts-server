@@ -27,6 +27,10 @@ import {
   ApiTags
 } from '@nestjs/swagger';
 import { ApiResponseError } from '../../common/errors/api-error.schema';
+import {
+  AccountWithSyntheticAccounts,
+  AtomicAccount
+} from './documents/accounts.descriptors';
 
 @Controller('accounts')
 @ApiTags('accounts')
@@ -34,7 +38,10 @@ export class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
   @Get('/')
-  @ApiOkResponse({ description: 'List of accounts', type: [AccountEntity] })
+  @ApiOkResponse({
+    description: 'List of accounts',
+    type: [AtomicAccount]
+  })
   @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
   async get(): Promise<AccountEntity[]> {
@@ -44,7 +51,7 @@ export class AccountsController {
   @Get('/single/:id')
   @ApiOkResponse({
     description: 'Account with provided id',
-    type: AccountEntity
+    type: AtomicAccount
   })
   @ApiNotFoundResponse({
     description: "Account with provided id hasn't been found",
@@ -59,7 +66,7 @@ export class AccountsController {
   @Get('/with-synthetic')
   @ApiOkResponse({
     description: 'List of accounts with linked synthetic accounts',
-    type: [AccountEntity]
+    type: [AccountWithSyntheticAccounts]
   })
   @SerializeOptions({ groups: accountGroupsWithSynthetic })
   @UseInterceptors(ClassSerializerInterceptor)
@@ -70,7 +77,7 @@ export class AccountsController {
   @Get('/with-synthetic/single/:id')
   @ApiOkResponse({
     description: 'Account with provided id and linked synthetic accounts',
-    type: AccountEntity
+    type: AccountWithSyntheticAccounts
   })
   @ApiNotFoundResponse({
     description: "Account with provided id hasn't been found",
@@ -87,7 +94,7 @@ export class AccountsController {
   @Post('/')
   @ApiCreatedResponse({
     description: 'Newly created account',
-    type: AccountEntity
+    type: AtomicAccount
   })
   @ApiBadRequestResponse({
     description:
@@ -103,7 +110,7 @@ export class AccountsController {
   @Put('/:id')
   @ApiOkResponse({
     description: 'Updated account',
-    type: AccountEntity
+    type: AtomicAccount
   })
   @ApiBadRequestResponse({
     description:
@@ -123,7 +130,7 @@ export class AccountsController {
   @Delete('/:id')
   @ApiOkResponse({
     description: 'Deleted account',
-    type: AccountEntity
+    type: AtomicAccount
   })
   @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)

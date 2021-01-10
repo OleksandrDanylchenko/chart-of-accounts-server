@@ -10,7 +10,7 @@ import {
   descriptionField,
   numberField,
   titleField
-} from '../documents/swagger-descriptors';
+} from '../documents/account-fields.descriptors';
 
 export class EditAccountDto {
   @ApiPropertyOptional(numberField)
