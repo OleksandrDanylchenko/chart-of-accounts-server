@@ -18,8 +18,10 @@ import {
 } from './serializers/sub-account.serializer';
 import { CreateSubAccountDto } from './dtos/create-sub-account.dto';
 import { EditSubAccountDto } from './dtos/edit-sub-account.dto';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('sub-accounts')
+@ApiTags('sub-accounts')
 @SerializeOptions({ groups: defaultSubAccountGroups })
 export class SubAccountsController {
   constructor(private readonly subAccountsService: SubAccountsService) {}

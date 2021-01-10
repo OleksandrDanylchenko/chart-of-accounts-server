@@ -19,8 +19,14 @@ import {
 import { AccountsService } from './accounts.service';
 import { CreateAccountDto } from './dtos/create-account.dto';
 import { EditAccountDto } from './dtos/edit-account.dto';
-import { ApiNotFoundResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { NotFoundError } from '../../common/errors/not-found-error.schema';
+import {
+  ApiBadRequestResponse,
+  ApiCreatedResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
+  ApiTags
+} from '@nestjs/swagger';
+import { ApiResponseError } from '../../common/errors/api-error.schema';
 
 @Controller('accounts')
 @ApiTags('accounts')
@@ -42,7 +48,7 @@ export class AccountsController {
   })
   @ApiNotFoundResponse({
     description: "Account with provided id hasn't been found",
-    type: NotFoundError
+    type: ApiResponseError
   })
   @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
@@ -51,6 +57,10 @@ export class AccountsController {
   }
 
   @Get('/with-synthetic')
+  @ApiOkResponse({
+    description: 'List of accounts with linked synthetic accounts',
+    type: [AccountEntity]
+  })
   @SerializeOptions({ groups: accountGroupsWithSynthetic })
   @UseInterceptors(ClassSerializerInterceptor)
   async getWithSynthetic(): Promise<AccountEntity[]> {
@@ -58,6 +68,14 @@ export class AccountsController {
   }
 
   @Get('/with-synthetic/single/:id')
+  @ApiOkResponse({
+    description: 'Account with provided id and linked synthetic accounts',
+    type: AccountEntity
+  })
+  @ApiNotFoundResponse({
+    description: "Account with provided id hasn't been found",
+    type: ApiResponseError
+  })
   @SerializeOptions({ groups: accountGroupsWithSynthetic })
   @UseInterceptors(ClassSerializerInterceptor)
   async getWithSyntheticById(
@@ -67,6 +85,15 @@ export class AccountsController {
   }
 
   @Post('/')
+  @ApiCreatedResponse({
+    description: 'Newly created account',
+    type: AccountEntity
+  })
+  @ApiBadRequestResponse({
+    description:
+      'Passed creation body contains data, which contradicts to validation rules or database',
+    type: ApiResponseError
+  })
   @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
   async create(@Body() inputs: CreateAccountDto): Promise<AccountEntity> {
@@ -74,6 +101,15 @@ export class AccountsController {
   }
 
   @Put('/:id')
+  @ApiOkResponse({
+    description: 'Updated account',
+    type: AccountEntity
+  })
+  @ApiBadRequestResponse({
+    description:
+      'Passed editing body contains data, which contradicts to validation rules or database',
+    type: ApiResponseError
+  })
   @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
   async update(
@@ -85,6 +121,10 @@ export class AccountsController {
   }
 
   @Delete('/:id')
+  @ApiOkResponse({
+    description: 'Deleted account',
+    type: AccountEntity
+  })
   @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
   async delete(@Param('id', ParseIntPipe) id: string): Promise<AccountEntity> {

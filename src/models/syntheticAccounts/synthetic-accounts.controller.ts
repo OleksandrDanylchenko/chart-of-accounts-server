@@ -22,8 +22,10 @@ import {
 import { EditSyntheticAccountDto } from './dtos/edit-synt-account.dto';
 import { CreateSyntheticAccountDto } from './dtos/create-synt-account.dto';
 import { defaultAccountGroups } from '../accounts/serializers/account.serializer';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('synthetic-accounts')
+@ApiTags('synthetic-accounts')
 export class SyntheticAccountsController {
   constructor(
     private readonly syntheticAccountsService: SyntheticAccountsService
