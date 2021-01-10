@@ -31,12 +31,14 @@ import {
   AccountWithSyntheticAccounts,
   AtomicAccount
 } from './documents/account.descriptors';
+import { Public } from '../../common/decorators/routes-privacy.decorator';
 
 @Controller('accounts')
 @ApiTags('accounts')
 export class AccountsController {
   constructor(private readonly accountsService: AccountsService) {}
 
+  @Public()
   @Get('/')
   @ApiOkResponse({
     description: 'List of accounts',
@@ -48,6 +50,7 @@ export class AccountsController {
     return await this.accountsService.getAll();
   }
 
+  @Public()
   @Get('/single/:id')
   @ApiOkResponse({
     description: 'Account with provided id',
@@ -63,6 +66,7 @@ export class AccountsController {
     return await this.accountsService.get(id, [], true);
   }
 
+  @Public()
   @Get('/with-synthetic')
   @ApiOkResponse({
     description: 'List of accounts with linked synthetic accounts',
@@ -74,6 +78,7 @@ export class AccountsController {
     return await this.accountsService.getAll(['syntheticAccounts']);
   }
 
+  @Public()
   @Get('/with-synthetic/single/:id')
   @ApiOkResponse({
     description: 'Account with provided id and linked synthetic accounts',

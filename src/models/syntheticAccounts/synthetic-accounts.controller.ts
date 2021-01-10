@@ -36,6 +36,7 @@ import {
   SyntheticAccountWithSubAccounts,
   SyntheticAccountWithSubAccountsAndLinkedSyntAccounts
 } from './documentation/synthetic-account.descriptors';
+import { Public } from '../../common/decorators/routes-privacy.decorator';
 
 @Controller('synthetic-accounts')
 @ApiTags('synthetic-accounts')
@@ -44,6 +45,7 @@ export class SyntheticAccountsController {
     private readonly syntheticAccountsService: SyntheticAccountsService
   ) {}
 
+  @Public()
   @Get('/')
   @ApiOkResponse({
     description: 'List of synthetic accounts',
@@ -55,6 +57,7 @@ export class SyntheticAccountsController {
     return await this.syntheticAccountsService.getAll();
   }
 
+  @Public()
   @Get('/single/:id')
   @ApiOkResponse({
     description: 'Synthetic account with provided id',
@@ -72,6 +75,7 @@ export class SyntheticAccountsController {
     return await this.syntheticAccountsService.get(id);
   }
 
+  @Public()
   @Get('/with-linked')
   @ApiOkResponse({
     description:
@@ -89,6 +93,7 @@ export class SyntheticAccountsController {
     ]);
   }
 
+  @Public()
   @Get('/with-linked/single/:id')
   @ApiOkResponse({
     description:
@@ -112,6 +117,7 @@ export class SyntheticAccountsController {
     ]);
   }
 
+  @Public()
   @Get('/with-sub')
   @ApiOkResponse({
     description: 'List of synthetic accounts with linked sub-accounts',
@@ -125,6 +131,7 @@ export class SyntheticAccountsController {
     return await this.syntheticAccountsService.getAll(['subAccounts']);
   }
 
+  @Public()
   @Get('/with-sub/single/:id')
   @ApiOkResponse({
     description: 'Synthetic account with provided id and linked sub-accounts',
@@ -144,6 +151,7 @@ export class SyntheticAccountsController {
     return await this.syntheticAccountsService.get(id, ['subAccounts']);
   }
 
+  @Public()
   @Get('/with-sub-linked')
   @ApiOkResponse({
     description:
@@ -162,6 +170,7 @@ export class SyntheticAccountsController {
     ]);
   }
 
+  @Public()
   @Get('/with-sub-linked/single/:id')
   @ApiOkResponse({
     description:

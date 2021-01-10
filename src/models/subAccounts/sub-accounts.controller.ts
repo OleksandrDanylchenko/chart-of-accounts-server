@@ -27,6 +27,7 @@ import {
 } from '@nestjs/swagger';
 import { ApiResponseError } from '../../common/errors/api-error.schema';
 import { AtomicSubAccount } from './documents/sub-account.descriptors';
+import { Public } from '../../common/decorators/routes-privacy.decorator';
 
 @Controller('sub-accounts')
 @ApiTags('sub-accounts')
@@ -34,6 +35,7 @@ import { AtomicSubAccount } from './documents/sub-account.descriptors';
 export class SubAccountsController {
   constructor(private readonly subAccountsService: SubAccountsService) {}
 
+  @Public()
   @Get('/')
   @ApiOkResponse({
     description: 'List of sub-accounts',
@@ -44,6 +46,7 @@ export class SubAccountsController {
     return await this.subAccountsService.getAll();
   }
 
+  @Public()
   @Get('/single/:id')
   @ApiOkResponse({
     description: 'Sub-account with provided id',
