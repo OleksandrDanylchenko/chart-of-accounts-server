@@ -4,6 +4,7 @@ import { PostgresConfigModule } from './config/database/postgres/config.module';
 import { PostgresDatabaseProviderModule } from './providers/database/postgres/provider.module';
 import { AccountsModule } from './models/accounts/accounts.module';
 import { SyntheticAccountsModule } from './models/syntheticAccounts/synthetic-accounts.module';
+import { SubAccountsModule } from './models/subAccounts/sub-accounts.module';
 
 @Module({
   imports: [
@@ -11,7 +12,8 @@ import { SyntheticAccountsModule } from './models/syntheticAccounts/synthetic-ac
     PostgresConfigModule,
     PostgresDatabaseProviderModule,
     AccountsModule,
-    SyntheticAccountsModule
+    SyntheticAccountsModule,
+    SubAccountsModule
   ],
   controllers: [],
   providers: []
