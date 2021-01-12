@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from './users.repository';
 import { UserEntity } from './serializers/user.serializers';
-import LoginUserDto from './dtos/login-user.dto';
 import { hashValue } from '../../common/utils/hashing.helper';
+import { LoginUserDto } from './dtos/login-user.dto';
+import { validateOrReject } from 'class-validator';
 
 @Injectable()
 export class UsersService {
@@ -25,11 +26,24 @@ export class UsersService {
   }
 
   async create(inputs: LoginUserDto): Promise<UserEntity> {
+    await this.validateInputs(inputs);
     inputs.password = await hashValue(inputs.password);
     return await this.usersRepository.createEntity(inputs);
   }
 
   async update(user: UserEntity, inputs: LoginUserDto): Promise<UserEntity> {
+    await this.validateInputs(inputs);
     return await this.usersRepository.updateEntity(user, inputs);
+  }
+
+  async validateInputs(inputs: LoginUserDto): Promise<void> {
+    const userDto = new LoginUserDto();
+    userDto.email = inputs.email;
+    userDto.password = inputs.password;
+    try {
+      await validateOrReject(userDto);
+    } catch (errors) {
+      throw new BadRequestException(errors);
+    }
   }
 }
