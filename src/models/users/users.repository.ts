@@ -6,6 +6,11 @@ import { classToPlain, plainToClass } from 'class-transformer';
 
 @EntityRepository(User)
 export class UsersRepository extends ModelRepository<User, UserEntity> {
+  async getByEmail(email: string): Promise<UserEntity> {
+    const user = await this.findOne({ where: { email } });
+    return this.transform(user);
+  }
+
   transform(model: User): UserEntity {
     const transformOptions = {
       groups: allUserGroups

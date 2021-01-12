@@ -8,7 +8,10 @@ import {
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 import { ApiResponseError } from '../common/errors/api-error.schema';
+import { UserEntity } from '../models/users/serializers/user.serializers';
+import { Public } from '../common/decorators/routes-privacy.decorator';
 
+@Public()
 @Controller('/auth')
 @ApiTags('auth')
 export class AuthController {
@@ -23,6 +26,7 @@ export class AuthController {
   })
   @Post('/login')
   async login(@Req() req: Request): Promise<{ access_token: string }> {
-    return this.authService.login(req.user);
+    const userEntity = req.user as UserEntity;
+    return this.authService.login(userEntity);
   }
 }
