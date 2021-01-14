@@ -16,19 +16,19 @@ import { SubAccount } from '../../subAccounts/entities/sub-account.entity';
 @Index('synthetic_accounts_pkey', ['id'], { unique: true })
 @Entity('synthetic_accounts')
 export class SyntheticAccount extends BaseEntity {
-  @PrimaryGeneratedColumn({ type: 'integer', name: 'id' })
+  @PrimaryGeneratedColumn({ name: 'id', type: 'integer' })
   id: number;
 
-  @Column({ type: 'integer', name: 'number', unique: true })
+  @Column({ name: 'number', type: 'integer', unique: true })
   number: number;
 
-  @Column({ type: 'text', name: 'title' })
+  @Column({ name: 'title', type: 'text' })
   title: string;
 
-  @Column({ type: 'text', name: 'description' })
+  @Column({ name: 'description', type: 'text' })
   description: string;
 
-  @Column({ type: 'integer', name: 'account_id' })
+  @Column({ name: 'account_id', type: 'integer' })
   accountId: number;
 
   @ManyToOne(() => Account, (account) => account.syntheticAccounts)

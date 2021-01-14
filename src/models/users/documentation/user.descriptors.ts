@@ -5,10 +5,17 @@ import {
   createdAtField,
   emailField,
   passwordField,
+  refreshTokenField,
+  refreshTokenIdField,
   updatedAtField
 } from './user-fields.descriptors';
+import { IRefreshToken } from '../../refreshTokens/interfaces/refresh-token.interface';
 
-export class AtomicUser extends OmitType(UserEntity, ['password'] as const) {
+export class AtomicUser extends OmitType(UserEntity, [
+  'password',
+  'refreshTokenId',
+  'refreshToken'
+] as const) {
   @ApiResponseModelProperty(emailField)
   email: string;
 
@@ -19,6 +26,17 @@ export class AtomicUser extends OmitType(UserEntity, ['password'] as const) {
   updatedAt: Date;
 }
 
+export class UserWithRefreshToken extends IntersectionType(
+  AtomicUser,
+  PickType(AtomicUser, ['refreshTokenId', 'refreshToken'] as const)
+) {
+  @ApiResponseModelProperty(refreshTokenIdField)
+  refreshTokenId: number;
+
+  @ApiResponseModelProperty(refreshTokenField)
+  refreshToken: IRefreshToken;
+}
+
 export class UserWithPassword extends IntersectionType(
   AtomicUser,
   PickType(AtomicUser, ['password'] as const)
@@ -26,3 +44,8 @@ export class UserWithPassword extends IntersectionType(
   @ApiResponseModelProperty(passwordField)
   password: string;
 }
+
+export class UserWithPasswordAndRefreshToken extends IntersectionType(
+  UserWithRefreshToken,
+  UserWithPassword
+) {}

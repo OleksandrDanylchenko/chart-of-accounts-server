@@ -19,3 +19,15 @@ export const updatedAtField: ApiPropertyOptions = {
   description: 'Timestamp of user update',
   type: Date
 };
+
+export const refreshTokenIdField: ApiPropertyOptions = {
+  description: 'Id of linked refresh token entity',
+  default: 1,
+  type: Number
+};
+
+export const refreshTokenField: ApiPropertyOptions = {
+  description: 'Linked refresh token entity',
+  default: 1,
+  type: Number
+};
