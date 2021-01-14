@@ -1,5 +1,7 @@
+import { IUser } from '../../users/interfaces/user.interface';
+
 export interface IRefreshToken {
   isRevoked: boolean;
   expires: Date;
-  userId: number;
+  user: IUser | null;
 }

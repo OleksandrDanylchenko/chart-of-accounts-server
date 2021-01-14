@@ -1,9 +1,14 @@
 import { Expose } from 'class-transformer';
 import { ModelEntity } from '../../../common/serializers/model.serializer';
 import { IRefreshToken } from '../interfaces/refresh-token.interface';
+import { IUser } from '../../users/interfaces/user.interface';
 
-export const defaultUserGroups: string[] = ['refresh_token.timestamps'];
-export const allUserGroups: string[] = [...defaultUserGroups];
+export const defaultRefreshTokenGroups: string[] = ['refresh_token.timestamps'];
+export const refreshTokenWithUserGroups: string[] = [
+  ...defaultRefreshTokenGroups,
+  'refresh_token.user'
+];
+export const allRefreshTokenGroups: string[] = [...refreshTokenWithUserGroups];
 
 export class RefreshTokenEntity extends ModelEntity implements IRefreshToken {
   @Expose()
@@ -13,9 +18,6 @@ export class RefreshTokenEntity extends ModelEntity implements IRefreshToken {
   isRevoked: boolean;
 
   @Expose()
-  userId: number;
-
-  @Expose()
   expires: Date;
 
   @Expose({ groups: ['refresh_token.timestamps'] })
@@ -23,4 +25,7 @@ export class RefreshTokenEntity extends ModelEntity implements IRefreshToken {
 
   @Expose({ groups: ['refresh_token.timestamps'] })
   updatedAt: Date;
+
+  @Expose({ groups: ['refresh_token.user'] })
+  user: IUser | null;
 }

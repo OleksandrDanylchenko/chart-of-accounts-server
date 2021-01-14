@@ -21,10 +21,10 @@ export class UserEntity extends ModelEntity implements IUser {
   email: string;
 
   @Expose({ groups: ['user.refreshToken'] })
-  refreshTokenId: number;
+  refreshTokenId: number | null;
 
   @Expose({ groups: ['user.refreshToken'] })
-  refreshToken: IRefreshToken;
+  refreshToken: IRefreshToken | null;
 
   @Expose({ groups: ['user.password'] })
   password: string;
