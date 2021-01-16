@@ -123,9 +123,11 @@ export class SyntheticAccountsService {
   }
 
   async validateAccountNumberNotExist(number: number): Promise<void> {
-    const accountWithNumber = await this.syntheticAccountsRepository.getWhere({
-      number
-    });
+    const accountWithNumber = await this.syntheticAccountsRepository.getOneWhere(
+      {
+        number
+      }
+    );
     if (accountWithNumber) {
       throw new BadRequestException(
         `Synthetic account with provided number "${number}" already exists!`

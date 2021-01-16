@@ -59,7 +59,7 @@ export class AccountsService {
   }
 
   async validateAccountNumberNotExist(number: number): Promise<void> {
-    const accountWithNumber = await this.accountsRepository.getWhere({
+    const accountWithNumber = await this.accountsRepository.getOneWhere({
       number
     });
     if (accountWithNumber) {
