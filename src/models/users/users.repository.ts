@@ -1,5 +1,5 @@
 import User from './entities/user.entity';
-import { EntityRepository } from 'typeorm';
+import { Connection, EntityRepository } from 'typeorm';
 import { ModelRepository } from '../model.repository';
 import { allUserGroups, UserEntity } from './serializers/user.serializers';
 import { classToPlain, plainToClass } from 'class-transformer';
@@ -20,3 +20,10 @@ export class UsersRepository extends ModelRepository<User, UserEntity> {
     return models.map((model) => this.transform(model));
   }
 }
+
+export const UsersRepositoryProvider = {
+  provide: UsersRepository,
+  useFactory: (connection: Connection): UsersRepository =>
+    connection.getCustomRepository(UsersRepository),
+  inject: [Connection]
+};
