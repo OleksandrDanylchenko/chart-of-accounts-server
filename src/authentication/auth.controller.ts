@@ -43,7 +43,7 @@ export class AuthController {
     description: 'Cannot allow JWT issuing',
     type: ApiResponseError
   })
-  @Post('/register')
+  @Post('/registration')
   async register(@Req() req: Request): Promise<{ access_token: string }> {
     const user = req.user as User;
     return this.localService.login(user);
