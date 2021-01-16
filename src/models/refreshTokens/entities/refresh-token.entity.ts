@@ -28,6 +28,6 @@ export default class RefreshToken extends BaseEntity {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp' })
   updatedAt: Date;
 
-  @OneToOne(() => User, (user) => user.refreshToken)
+  @OneToOne(() => User, (user) => user.refreshToken, { onDelete: 'SET NULL' })
   user: User | null;
 }

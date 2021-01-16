@@ -15,7 +15,9 @@ export class RefreshTokensRepository extends ModelRepository<
 > {
   async deleteUserTokens(user: User): Promise<void> {
     const userToken = await this.findUserToken(user);
-    await this.deleteNestedEntity(userToken);
+    if (userToken) {
+      await this.deleteNestedEntity(userToken);
+    }
   }
 
   async findUserToken(user: User): Promise<RefreshToken> {

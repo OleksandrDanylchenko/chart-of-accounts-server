@@ -32,7 +32,10 @@ export default class User extends BaseEntity {
   @Column({ name: 'refresh_token_id', type: 'text', nullable: true })
   refreshTokenId: number;
 
-  @OneToOne(() => RefreshToken, (refreshToken) => refreshToken.user) // specify inverse side as a second parameter
+  @OneToOne(() => RefreshToken, (refreshToken) => refreshToken.user, {
+    nullable: true,
+    onDelete: 'SET NULL'
+  })
   @JoinColumn([{ name: 'refresh_token_id', referencedColumnName: 'id' }])
   refreshToken: RefreshToken;
 }
