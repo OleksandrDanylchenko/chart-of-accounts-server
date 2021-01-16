@@ -1,11 +1,4 @@
-import {
-  Controller,
-  ParseIntPipe,
-  Post,
-  Query,
-  Req,
-  UseGuards
-} from '@nestjs/common';
+import { Body, Controller, Post, Req, UseGuards } from '@nestjs/common';
 import { Request } from 'express';
 import {
   ApiBody,
@@ -17,7 +10,7 @@ import { ApiResponseError } from '../common/errors/api-error.schema';
 import { Public } from '../common/decorators/routes-privacy.decorator';
 import { LocalAuthGuard } from './local/guards/local-auth.guard';
 import User from '../models/users/entities/user.entity';
-import { JwtTokensService } from './jwt/jwt-tokens.service';
+import { JwtTokensService, TokensPair } from './jwt/jwt-tokens.service';
 import { LoginUserDto } from '../models/users/dtos/login-user.dto';
 
 @Public()
@@ -36,9 +29,9 @@ export class AuthController {
     type: ApiResponseError
   })
   @Post('/login')
-  async login(@Req() req: Request): Promise<{ accessToken: string }> {
+  async login(@Req() req: Request): Promise<TokensPair> {
     const user = req.user as User;
-    return this.tokenService.login(user);
+    return this.tokenService.generateTokens(user);
   }
 
   @UseGuards(LocalAuthGuard)
@@ -51,11 +44,12 @@ export class AuthController {
     type: ApiResponseError
   })
   @Post('/registration')
-  async register(@Req() req: Request): Promise<{ accessToken: string }> {
+  async register(@Req() req: Request): Promise<TokensPair> {
     const user = req.user as User;
-    return this.tokenService.register(user);
+    return this.tokenService.generateTokens(user);
   }
 
+  @Public()
   @ApiOkResponse({
     description: 'JWT access token for provided user data'
   })
@@ -65,8 +59,8 @@ export class AuthController {
   })
   @Post('/update-token')
   async updateToken(
-    @Query('userId', ParseIntPipe) userId: number
-  ): Promise<{ accessToken: string }> {
-    return this.tokenService.updateToken(userId);
+    @Body() payload: { refreshToken: string }
+  ): Promise<TokensPair> {
+    return this.tokenService.updateTokens(payload.refreshToken);
   }
 }

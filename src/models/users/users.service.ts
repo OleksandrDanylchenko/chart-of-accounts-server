@@ -6,22 +6,18 @@ import { LoginUserDto } from './dtos/login-user.dto';
 import { validateOrReject } from 'class-validator';
 import { EditUserDto } from './dtos/edit-user.dto';
 import User from './entities/user.entity';
-import { RefreshTokensService } from '../refreshTokens/refresh-tokens.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UsersRepository)
-    private readonly usersRepository: UsersRepository,
-    private readonly refreshTokensService: RefreshTokensService
+    private readonly usersRepository: UsersRepository
   ) {}
 
   async create(inputs: LoginUserDto): Promise<User> {
     await this.validateInputs(inputs);
     inputs.password = await hashValue(inputs.password);
-    const newUser = await this.usersRepository.createEntity(inputs);
-    await this.refreshTokensService.create(newUser);
-    return newUser;
+    return this.usersRepository.createEntity(inputs);
   }
 
   async update(userId: number, inputs: EditUserDto): Promise<User> {
