@@ -1,12 +1,12 @@
 import { plainToClass } from 'class-transformer';
-import { Repository, DeepPartial, DeleteResult } from 'typeorm';
+import { DeepPartial, DeleteResult, Repository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 import { ModelEntity } from '../common/serializers/model.serializer';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
-  async getDatabaseEntityById(
-    id: string,
+  async getById(
+    id: number,
     relations: string[] = [],
     throwsException = false
   ): Promise<T | null> {
@@ -26,38 +26,49 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
       .catch((error) => Promise.reject(error));
   }
 
-  async getById(
-    id: string,
+  async getAll(
     relations: string[] = [],
     throwsException = false
-  ): Promise<K | null> {
-    return await this.findOne({
-      where: { id },
-      relations
-    })
-      .then((entity) => {
-        if (!entity && throwsException) {
-          return Promise.reject(
-            new NotFoundException(`Model not found. ID: ${id}`)
-          );
+  ): Promise<T[] | null> {
+    return this.find({ relations })
+      .then((entities) => {
+        if (!entities && throwsException) {
+          return Promise.reject(new NotFoundException('Model not found'));
         }
 
-        return Promise.resolve(entity ? this.transform(entity) : null);
+        return Promise.resolve(entities);
       })
       .catch((error) => Promise.reject(error));
   }
 
-  async getAll(
+  async getOneWhere(
+    where: Record<string, unknown>,
     relations: string[] = [],
     throwsException = false
-  ): Promise<K[] | null> {
-    return await this.find({ relations })
-      .then((entities) => {
-        if (!entities && throwsException) {
-          return Promise.reject(new NotFoundException('Model not found.'));
+  ): Promise<T | null> {
+    return this.findOne({ where, relations })
+      .then((entity) => {
+        if (!entity && throwsException) {
+          return Promise.reject(new NotFoundException('Model not found'));
         }
 
-        return Promise.resolve(entities ? this.transformMany(entities) : null);
+        return Promise.resolve(entity);
+      })
+      .catch((error) => Promise.reject(error));
+  }
+
+  async getWhere(
+    where: Record<string, unknown>,
+    relations: string[] = [],
+    throwsException = false
+  ): Promise<T[] | null> {
+    return this.find({ where, relations })
+      .then((entities) => {
+        if (!entities && throwsException) {
+          return Promise.reject(new NotFoundException('Model not found'));
+        }
+
+        return Promise.resolve(entities);
       })
       .catch((error) => Promise.reject(error));
   }
@@ -65,43 +76,37 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
   async createEntity(
     inputs: DeepPartial<T>,
     relations: string[] = []
-  ): Promise<K> {
+  ): Promise<T> {
     return this.save(inputs)
       .then(async (entity) => await this.getById((entity as any).id, relations))
       .catch((error) => Promise.reject(error));
   }
 
   async updateEntity(
-    entity: K,
-    inputs: QueryDeepPartialEntity<T>,
-    relations: string[] = []
-  ): Promise<K> {
-    return this.update(entity.id, inputs)
-      .then(async () => await this.getById(entity.id, relations))
+    id: number,
+    inputs: QueryDeepPartialEntity<T>
+  ): Promise<T> {
+    return this.update(id, inputs)
+      .then(async () => await this.getById(id))
       .catch((error) => Promise.reject(error));
   }
 
-  async updateNestedEntity(
-    entity: K,
-    inputs: DeepPartial<T>,
-    relations: string[] = []
-  ): Promise<K> {
-    const nestedEntity = { id: entity.id, ...inputs } as DeepPartial<T>;
+  async updateNestedEntity(id: number, inputs: DeepPartial<T>): Promise<T> {
+    const nestedEntity = { id, ...inputs } as DeepPartial<T>;
     return this.save(nestedEntity)
-      .then(async () => await this.getById(entity.id, relations))
+      .then(async () => await this.getById(id))
       .catch((error) => Promise.reject(error));
   }
 
-  async deleteEntity(entity: K): Promise<DeleteResult> {
-    return this.delete(entity.id)
+  async deleteEntity(id: number): Promise<DeleteResult> {
+    return this.delete(id)
       .then((deletionResult) => Promise.resolve(deletionResult))
       .catch((error) => Promise.reject(error));
   }
 
-  async deleteNestedEntity(entity: K): Promise<K> {
-    const dbEntity = await this.getDatabaseEntityById(entity.id);
-    return this.remove(dbEntity)
-      .then((entity) => Promise.resolve(entity ? this.transform(entity) : null))
+  async deleteNestedEntity(entity: T): Promise<T> {
+    return this.remove(entity)
+      .then((entity) => Promise.resolve(entity))
       .catch((error) => Promise.reject(error));
   }
 
