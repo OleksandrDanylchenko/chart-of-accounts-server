@@ -16,6 +16,7 @@ import {
   TokensPair
 } from './jwt/jwt-tokens.service';
 import { LoginUserDto } from '../models/users/dtos/login-user.dto';
+import { RegistrationUserDto } from '../models/users/dtos/registration-user.dto';
 
 @Public()
 @Controller('/auth')
@@ -40,7 +41,10 @@ export class AuthController {
   }
 
   @UseGuards(LocalAuthGuard)
-  @ApiBody({ description: "Registration user's data", type: LoginUserDto })
+  @ApiBody({
+    description: "Registration user's data",
+    type: RegistrationUserDto
+  })
   @ApiOkResponse({
     description: 'JWT access token and refresh token for provided credentials',
     type: TokensPair

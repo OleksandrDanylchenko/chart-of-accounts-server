@@ -16,6 +16,11 @@ export const passwordField: ApiPropertyOptions = {
   type: String
 };
 
+export const registrationSecretField: ApiPropertyOptions = {
+  description: 'Secret registration token, which is issued by administrator',
+  type: String
+};
+
 export const createdAtField: ApiPropertyOptions = {
   description: 'Timestamp of user creation',
   type: Date

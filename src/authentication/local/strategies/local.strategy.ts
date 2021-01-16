@@ -7,7 +7,7 @@ import { Request } from 'express';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
-  constructor(private localService: LocalService) {
+  constructor(private readonly localService: LocalService) {
     super({ usernameField: 'email', passReqToCallback: true });
   }
 
@@ -16,7 +16,12 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     if (req.path.includes('/login')) {
       user = await this.localService.validateExistingUser(email, password);
     } else {
-      user = await this.localService.registerUser(email, password);
+      const registrationSecret = req.body.registrationSecret;
+      user = await this.localService.registerUser(
+        email,
+        password,
+        registrationSecret
+      );
     }
 
     if (!user) {
