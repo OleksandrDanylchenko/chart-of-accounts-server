@@ -8,7 +8,7 @@ import { SubAccountsModule } from './models/subAccounts/sub-accounts.module';
 import { AuthModule } from './authentication/auth.module';
 import { AuthConfigModule } from './config/authentication/config.module';
 import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './authentication/guards/jwt-auth.guard';
+import { JwtAuthGuard } from './authentication/jwt/guards/jwt-auth.guard';
 
 @Module({
   imports: [

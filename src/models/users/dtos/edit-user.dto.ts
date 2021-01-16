@@ -14,10 +14,12 @@ import {
 
 export class EditUserDto {
   @ApiProperty(emailField)
+  @IsOptional()
   @IsEmail()
   email: string;
 
   @ApiProperty(passwordField)
+  @IsOptional()
   @IsString()
   @MinLength(5)
   password: string;

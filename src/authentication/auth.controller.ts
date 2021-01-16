@@ -1,6 +1,4 @@
 import { Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { LocalAuthGuard } from './guards/local-auth.guard';
-import { AuthService } from './auth.service';
 import { Request } from 'express';
 import {
   ApiOkResponse,
@@ -8,14 +6,17 @@ import {
   ApiUnauthorizedResponse
 } from '@nestjs/swagger';
 import { ApiResponseError } from '../common/errors/api-error.schema';
-import { UserEntity } from '../models/users/serializers/user.serializers';
 import { Public } from '../common/decorators/routes-privacy.decorator';
+import { LocalAuthGuard } from './local/guards/local-auth.guard';
+import User from '../models/users/entities/user.entity';
+import { JwtTokensService } from './jwt/jwt-tokens.service';
 
 @Public()
 @Controller('/auth')
 @ApiTags('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private localService: JwtTokensService) {}
+
   @UseGuards(LocalAuthGuard)
   @ApiOkResponse({
     description: 'JWT access token for provided user data'
@@ -26,7 +27,7 @@ export class AuthController {
   })
   @Post('/login')
   async login(@Req() req: Request): Promise<{ access_token: string }> {
-    const userEntity = req.user as UserEntity;
-    return this.authService.login(userEntity);
+    const user = req.user as User;
+    return this.localService.login(user);
   }
 }
