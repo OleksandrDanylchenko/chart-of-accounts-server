@@ -12,42 +12,56 @@ export class AccountsService {
     private readonly accountsRepository: AccountsRepository
   ) {}
 
-  async get(
-    id: string,
+  async getById(
+    id: number,
     relations: string[] = [],
     throwsException = false
   ): Promise<AccountEntity | null> {
-    return await this.accountsRepository.getById(
+    const account = await this.accountsRepository.getById(
       id,
       relations,
       throwsException
     );
+    return this.accountsRepository.transform(account);
   }
 
   async getAll(
     relations: string[] = [],
     throwsException = false
   ): Promise<AccountEntity[] | null> {
-    return await this.accountsRepository.getAll(relations, throwsException);
+    const accounts = await this.accountsRepository.getAll(
+      relations,
+      throwsException
+    );
+    return this.accountsRepository.transformMany(accounts);
   }
 
   async create(inputs: CreateAccountDto): Promise<AccountEntity> {
     await this.validateAccountNumberNotExist(inputs.number);
-    return await this.accountsRepository.createEntity(inputs);
+    const newAccount = await this.accountsRepository.createEntity(inputs);
+    return this.accountsRepository.transform(newAccount);
   }
 
   async update(
-    account: AccountEntity,
+    accountId: number,
     inputs: EditAccountDto
   ): Promise<AccountEntity> {
+    const account = await this.getById(accountId, [], true);
     if (inputs.number && inputs.number !== account.number) {
       await this.validateAccountNumberNotExist(inputs.number);
     }
-    return await this.accountsRepository.updateEntity(account, inputs);
+
+    const updatedAccount = await this.accountsRepository.updateEntity(
+      accountId,
+      inputs
+    );
+    return this.accountsRepository.transform(updatedAccount);
   }
 
   async validateAccountNumberNotExist(number: number): Promise<void> {
-    const accountWithNumber = await this.accountsRepository.getByNumber(number);
+    const accountWithNumber = await this.accountsRepository.getWhere({
+      number
+    });
     if (accountWithNumber) {
       throw new BadRequestException(
         `Account with provided number "${number}" already exists!`
@@ -55,10 +69,10 @@ export class AccountsService {
     }
   }
 
-  async delete(entityId: string): Promise<AccountEntity> {
-    const deletionEntity = await this.get(entityId);
+  async delete(entityId: number): Promise<AccountEntity> {
+    const deletionEntity = await this.getById(entityId);
     if (deletionEntity) {
-      await this.accountsRepository.deleteEntity(deletionEntity);
+      await this.accountsRepository.deleteEntity(entityId);
     }
     return deletionEntity;
   }

@@ -12,11 +12,11 @@ export class AccountsRepository extends ModelRepository<
   Account,
   AccountEntity
 > {
-  async getByNumber(number: number): Promise<AccountEntity> {
-    const account = await this.findOne({ where: { number } });
-    return this.transform(account);
-  }
-
+  // async getByNumber(number: number): Promise<AccountEntity> {
+  //   const account = await this.findOne({ where: { number } });
+  //   return this.transform(account);
+  // }
+  //
   transform(model: Account): AccountEntity {
     const transformOptions = {
       groups: allAccountGroups

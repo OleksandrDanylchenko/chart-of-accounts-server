@@ -63,8 +63,8 @@ export class AccountsController {
   })
   @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
-  async getById(@Param('id', ParseIntPipe) id: string): Promise<AccountEntity> {
-    return await this.accountsService.get(id, [], true);
+  async getById(@Param('id', ParseIntPipe) id: number): Promise<AccountEntity> {
+    return await this.accountsService.getById(id, [], true);
   }
 
   @Public()
@@ -92,9 +92,9 @@ export class AccountsController {
   @SerializeOptions({ groups: accountGroupsWithSynthetic })
   @UseInterceptors(ClassSerializerInterceptor)
   async getWithSyntheticById(
-    @Param('id', ParseIntPipe) id: string
+    @Param('id', ParseIntPipe) id: number
   ): Promise<AccountEntity> {
-    return await this.accountsService.get(id, ['syntheticAccounts'], true);
+    return await this.accountsService.getById(id, ['syntheticAccounts'], true);
   }
 
   @ApiBearerAuth()
@@ -128,11 +128,10 @@ export class AccountsController {
   @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
   async update(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() inputs: EditAccountDto
   ): Promise<AccountEntity> {
-    const account = await this.accountsService.get(id, [], true);
-    return await this.accountsService.update(account, inputs);
+    return await this.accountsService.update(id, inputs);
   }
 
   @ApiBearerAuth()
@@ -143,7 +142,7 @@ export class AccountsController {
   })
   @SerializeOptions({ groups: defaultAccountGroups })
   @UseInterceptors(ClassSerializerInterceptor)
-  async delete(@Param('id', ParseIntPipe) id: string): Promise<AccountEntity> {
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<AccountEntity> {
     return await this.accountsService.delete(id);
   }
 }
