@@ -12,11 +12,6 @@ export class SubAccountsRepository extends ModelRepository<
   SubAccount,
   SubAccountEntity
 > {
-  async getByNumber(number: number): Promise<SubAccountEntity> {
-    const account = await this.findOne({ where: { number } });
-    return this.transform(account);
-  }
-
   transform(model: SubAccount): SubAccountEntity {
     const transformOptions = {
       groups: allSubAccountGroups

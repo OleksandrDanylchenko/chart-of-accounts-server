@@ -59,9 +59,9 @@ export class SubAccountsController {
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async getById(
-    @Param('id', ParseIntPipe) id: string
+    @Param('id', ParseIntPipe) id: number
   ): Promise<SubAccountEntity> {
-    return await this.subAccountsService.get(id, [], true);
+    return await this.subAccountsService.getById(id, [], true);
   }
 
   @ApiBearerAuth()
@@ -93,11 +93,10 @@ export class SubAccountsController {
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async update(
-    @Param('id', ParseIntPipe) id: string,
+    @Param('id', ParseIntPipe) id: number,
     @Body() inputs: EditSubAccountDto
   ): Promise<SubAccountEntity> {
-    const account = await this.subAccountsService.get(id, [], true);
-    return await this.subAccountsService.update(account, inputs);
+    return await this.subAccountsService.update(id, inputs);
   }
 
   @ApiBearerAuth()
@@ -108,7 +107,7 @@ export class SubAccountsController {
   })
   @UseInterceptors(ClassSerializerInterceptor)
   async delete(
-    @Param('id', ParseIntPipe) id: string
+    @Param('id', ParseIntPipe) id: number
   ): Promise<SubAccountEntity> {
     return await this.subAccountsService.delete(id);
   }
