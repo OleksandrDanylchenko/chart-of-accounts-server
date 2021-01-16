@@ -8,7 +8,6 @@ export class LocalService {
   constructor(private usersRepository: UsersRepository) {}
 
   async validateExistingUser(email: string, password: string): Promise<User> {
-    debugger;
     const user = await this.usersRepository.getOneWhere({ email });
     if (!user) return null;
 

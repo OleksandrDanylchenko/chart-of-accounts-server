@@ -10,7 +10,7 @@ import {
   descriptionField,
   numberField,
   titleField
-} from '../documents/account-fields.descriptors';
+} from '../documentation/account-fields.descriptors';
 
 export class EditAccountDto {
   @ApiPropertyOptional(numberField)

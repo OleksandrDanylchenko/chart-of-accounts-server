@@ -4,6 +4,7 @@ import { ApiResponseModelProperty } from '@nestjs/swagger/dist/decorators/api-mo
 import {
   createdAtField,
   emailField,
+  idField,
   passwordField,
   refreshTokenField,
   refreshTokenIdField,
@@ -16,6 +17,9 @@ export class AtomicUser extends OmitType(UserEntity, [
   'refreshTokenId',
   'refreshToken'
 ] as const) {
+  @ApiResponseModelProperty(idField)
+  id: number;
+
   @ApiResponseModelProperty(emailField)
   email: string;
 
@@ -28,7 +32,7 @@ export class AtomicUser extends OmitType(UserEntity, [
 
 export class UserWithRefreshToken extends IntersectionType(
   AtomicUser,
-  PickType(AtomicUser, ['refreshTokenId', 'refreshToken'] as const)
+  PickType(UserEntity, ['refreshTokenId', 'refreshToken'] as const)
 ) {
   @ApiResponseModelProperty(refreshTokenIdField)
   refreshTokenId: number;
@@ -39,7 +43,7 @@ export class UserWithRefreshToken extends IntersectionType(
 
 export class UserWithPassword extends IntersectionType(
   AtomicUser,
-  PickType(AtomicUser, ['password'] as const)
+  PickType(UserEntity, ['password'] as const)
 ) {
   @ApiResponseModelProperty(passwordField)
   password: string;

@@ -11,7 +11,7 @@ import {
   numberField,
   syntheticAccountIdField,
   titleField
-} from '../documents/sub-account-fields.descriptors';
+} from '../documentation/sub-account-fields.descriptors';
 
 export class EditSubAccountDto {
   @ApiPropertyOptional(numberField)

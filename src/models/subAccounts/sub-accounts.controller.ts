@@ -27,7 +27,7 @@ import {
   ApiTags
 } from '@nestjs/swagger';
 import { ApiResponseError } from '../../common/errors/api-error.schema';
-import { AtomicSubAccount } from './documents/sub-account.descriptors';
+import { AtomicSubAccount } from './documentation/sub-account.descriptors';
 import { Public } from '../../common/decorators/routes-privacy.decorator';
 
 @Controller('sub-accounts')

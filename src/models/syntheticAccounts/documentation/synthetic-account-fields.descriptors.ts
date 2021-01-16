@@ -1,5 +1,5 @@
 import { ApiPropertyOptions } from '@nestjs/swagger';
-import { AtomicSubAccount } from '../../subAccounts/documents/sub-account.descriptors';
+import { AtomicSubAccount } from '../../subAccounts/documentation/sub-account.descriptors';
 import { AtomicSyntheticAccount } from './synthetic-account.descriptors';
 
 export const idField: ApiPropertyOptions = {

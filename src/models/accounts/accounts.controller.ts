@@ -31,7 +31,7 @@ import { ApiResponseError } from '../../common/errors/api-error.schema';
 import {
   AccountWithSyntheticAccounts,
   AtomicAccount
-} from './documents/account.descriptors';
+} from './documentation/account.descriptors';
 import { Public } from '../../common/decorators/routes-privacy.decorator';
 
 @Controller('accounts')
