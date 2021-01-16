@@ -11,28 +11,18 @@ export class RefreshTokensService {
     @InjectRepository(RefreshTokensRepository)
     private readonly refreshTokensRepository: RefreshTokensRepository
   ) {}
-
-  async get(
-    id: string,
-    relations: string[] = [],
-    throwsException = false
-  ): Promise<RefreshTokenEntity | null> {
-    return await this.refreshTokensRepository.getById(
-      id,
-      relations,
-      throwsException
-    );
-  }
-
   async create(user: User, ttl: number): Promise<RefreshTokenEntity> {
     const expires = new Date();
     expires.setTime(expires.getTime() + ttl);
 
-    const newRefreshToken = RefreshToken.create({
+    const newRefreshTokenInputs = RefreshToken.create({
       user,
       isRevoked: false,
       expires
     });
-    return await this.refreshTokensRepository.createEntity(newRefreshToken);
+    const newRefreshToken = await this.refreshTokensRepository.createEntity(
+      newRefreshTokenInputs
+    );
+    return this.refreshTokensRepository.transform(newRefreshToken);
   }
 }
