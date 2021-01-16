@@ -111,37 +111,4 @@ export class JwtTokensService {
     }
     return user;
   }
-
-  // async signToken(user: User): Promise<{ accessToken: string }> {
-  //   const payload: IJwtPayload = { email: user.email, sub: user.id };
-  //   return {
-  //     accessToken: this.jwtService.sign(payload)
-  //   };
-  // }
-  //
-  // async signRefreshToken(refreshToken: RefreshToken): Promise<string> {
-  //   const payload: IJwtPayload = { email: user.email, sub: user.id };
-  //   return {
-  //     accessToken: this.jwtService.sign({}, { expiresIn })
-  //   };
-  // }
-  //
-  // async login(user: User): Promise<{ accessToken: string }> {
-  //   await this.refreshTokensService.update(user);
-  //   return this.signToken(user);
-  // }
-  //
-  // async register(user: User): Promise<{ accessToken: string }> {
-  //   return this.signToken(user);
-  // }
-  //
-  // async updateToken(userId: number): Promise<{ accessToken: string }> {
-  //   const user = await this.usersRepository.getById(
-  //     userId,
-  //     ['refreshToken'],
-  //     true
-  //   );
-  //   await this.refreshTokensService.update(user);
-  //   return this.signToken(user);
-  // }
 }
