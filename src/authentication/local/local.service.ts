@@ -3,21 +3,19 @@ import { UsersRepository } from '../../models/users/users.repository';
 import { compareValues } from '../../common/utils/hashing.helper';
 import User from '../../models/users/entities/user.entity';
 import { UsersService } from '../../models/users/users.service';
-import { RefreshTokensService } from '../../models/refreshTokens/refresh-tokens.service';
 
 @Injectable()
 export class LocalService {
   constructor(
     private usersRepository: UsersRepository,
-    private usersService: UsersService,
-    private refreshTokensService: RefreshTokensService
+    private usersService: UsersService
   ) {}
 
   async validateExistingUser(email: string, password: string): Promise<User> {
     const user = await this.usersRepository.getOneWhere({ email }, [
       'refreshToken'
     ]);
-    if (!user || !(await this.refreshTokensService.validateUserToken(user))) {
+    if (!user) {
       return null;
     }
 
