@@ -16,7 +16,7 @@ import { RefreshTokensModule } from '../../models/refreshTokens/refresh-tokens.m
       imports: [AuthConfigModule],
       useFactory: async (authConfigService: AuthConfigService) => ({
         secret: authConfigService.jwtSecret,
-        signOptions: { expiresIn: '10s' }
+        signOptions: { expiresIn: '30m' }
       }),
       inject: [AuthConfigService]
     })
