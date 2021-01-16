@@ -72,7 +72,7 @@ export class JwtTokensService {
     token: string
   ): Promise<RefreshTokenPayload> {
     try {
-      return this.jwtService.verifyAsync(token);
+      return await this.jwtService.verifyAsync(token);
     } catch (e) {
       if (e instanceof TokenExpiredError) {
         throw new UnprocessableEntityException('Refresh token expired');
