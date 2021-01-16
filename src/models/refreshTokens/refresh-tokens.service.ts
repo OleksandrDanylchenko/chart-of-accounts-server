@@ -51,6 +51,6 @@ export class RefreshTokensService {
       user.refreshTokenId
     );
     const currentTime = new Date();
-    return refreshToken.expires >= currentTime;
+    return refreshToken.expires >= currentTime && !refreshToken.isRevoked;
   }
 }

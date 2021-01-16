@@ -1,4 +1,11 @@
-import { Controller, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  ParseIntPipe,
+  Post,
+  Query,
+  Req,
+  UseGuards
+} from '@nestjs/common';
 import { Request } from 'express';
 import {
   ApiBody,
@@ -17,7 +24,7 @@ import { LoginUserDto } from '../models/users/dtos/login-user.dto';
 @Controller('/auth')
 @ApiTags('auth')
 export class AuthController {
-  constructor(private localService: JwtTokensService) {}
+  constructor(private tokenService: JwtTokensService) {}
 
   @UseGuards(LocalAuthGuard)
   @ApiBody({ description: "Login user's data", type: LoginUserDto })
@@ -31,7 +38,7 @@ export class AuthController {
   @Post('/login')
   async login(@Req() req: Request): Promise<{ accessToken: string }> {
     const user = req.user as User;
-    return this.localService.signToken(user);
+    return this.tokenService.login(user);
   }
 
   @UseGuards(LocalAuthGuard)
@@ -46,6 +53,20 @@ export class AuthController {
   @Post('/registration')
   async register(@Req() req: Request): Promise<{ accessToken: string }> {
     const user = req.user as User;
-    return this.localService.signToken(user);
+    return this.tokenService.register(user);
+  }
+
+  @ApiOkResponse({
+    description: 'JWT access token for provided user data'
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Cannot allow JWT issuing',
+    type: ApiResponseError
+  })
+  @Post('/update-token')
+  async updateToken(
+    @Query('userId', ParseIntPipe) userId: number
+  ): Promise<{ accessToken: string }> {
+    return this.tokenService.updateToken(userId);
   }
 }
