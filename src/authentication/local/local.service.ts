@@ -23,6 +23,7 @@ export class LocalService {
   }
 
   async registerUser(email: string, password: string): Promise<User> {
-    return this.usersService.create({ email, password });
+    const user = await this.usersRepository.getOneWhere({ email });
+    return user ?? (await this.usersService.create({ email, password }));
   }
 }

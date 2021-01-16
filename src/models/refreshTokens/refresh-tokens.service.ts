@@ -7,7 +7,7 @@ import User from '../users/entities/user.entity';
 
 @Injectable()
 export class RefreshTokensService {
-  private static readonly DEFAULT_TIME_TO_LIVE = 2400000; // 40 minutes
+  private static readonly DEFAULT_TIME_TO_LIVE = 31556952000; // 1 year
 
   constructor(
     @InjectRepository(RefreshTokensRepository)
@@ -30,5 +30,27 @@ export class RefreshTokensService {
       newRefreshTokenInputs
     );
     return this.refreshTokensRepository.transform(newRefreshToken);
+  }
+
+  async update(
+    user: User,
+    ttl = RefreshTokensService.DEFAULT_TIME_TO_LIVE
+  ): Promise<RefreshTokenEntity> {
+    const expires = new Date();
+    expires.setTime(expires.getTime() + ttl);
+
+    const updatedRefreshToken = await this.refreshTokensRepository.updateEntity(
+      user.refreshTokenId,
+      { isRevoked: false, expires }
+    );
+    return this.refreshTokensRepository.transform(updatedRefreshToken);
+  }
+
+  async validateUserToken(user: User): Promise<boolean> {
+    const refreshToken = await this.refreshTokensRepository.getById(
+      user.refreshTokenId
+    );
+    const currentTime = new Date();
+    return refreshToken.expires >= currentTime;
   }
 }
