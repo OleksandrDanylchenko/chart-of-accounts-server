@@ -12,11 +12,6 @@ export class SyntheticAccountsRepository extends ModelRepository<
   SyntheticAccount,
   SyntheticAccountEntity
 > {
-  async getByNumber(number: number): Promise<SyntheticAccountEntity> {
-    const account = await this.findOne({ where: { number } });
-    return this.transform(account);
-  }
-
   transform(model: SyntheticAccount): SyntheticAccountEntity {
     const transformOptions = {
       groups: allSyntheticAccountGroups

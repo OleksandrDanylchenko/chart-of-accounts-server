@@ -13,26 +13,28 @@ export class SyntheticAccountsService {
     private readonly syntheticAccountsRepository: SyntheticAccountsRepository
   ) {}
 
-  async get(
-    id: string,
+  async getById(
+    id: number,
     relations: string[] = [],
     throwsException = false
   ): Promise<SyntheticAccountEntity | null> {
-    return await this.syntheticAccountsRepository.getById(
+    const syntheticAccount = await this.syntheticAccountsRepository.getById(
       id,
       relations,
       throwsException
     );
+    return this.syntheticAccountsRepository.transform(syntheticAccount);
   }
 
   async getAll(
     relations: string[] = [],
     throwsException = false
   ): Promise<SyntheticAccountEntity[] | null> {
-    return await this.syntheticAccountsRepository.getAll(
+    const syntheticAccounts = await this.syntheticAccountsRepository.getAll(
       relations,
       throwsException
     );
+    return this.syntheticAccountsRepository.transformMany(syntheticAccounts);
   }
 
   async create(
@@ -53,22 +55,23 @@ export class SyntheticAccountsService {
       byCreditAccountsIds
     );
 
-    const newSyntheticAccount = {
+    const newSyntheticAccountInputs = {
       ...newSyntheticAccountData,
       byDebitAccounts,
       byCreditAccounts
     };
 
-    return await this.syntheticAccountsRepository.createEntity(
-      newSyntheticAccount,
-      ['byDebitAccounts', 'byCreditAccounts']
+    const newSyntheticAccount = await this.syntheticAccountsRepository.createEntity(
+      newSyntheticAccountInputs
     );
+    return this.syntheticAccountsRepository.transform(newSyntheticAccount);
   }
 
   async update(
-    account: SyntheticAccountEntity,
+    accountId: number,
     inputs: EditSyntheticAccountDto
   ): Promise<SyntheticAccountEntity> {
+    const account = await this.getById(accountId, [], true);
     if (inputs.number && inputs.number !== account.number) {
       await this.validateAccountNumberNotExist(inputs.number);
     }
@@ -79,7 +82,7 @@ export class SyntheticAccountsService {
       ...updatedSyntheticAccountData
     } = inputs;
 
-    const updatedSyntheticAccount = {
+    const updatedSyntheticAccountInputs = {
       byDebitAccounts: undefined,
       byCreditAccounts: undefined,
       ...updatedSyntheticAccountData
@@ -88,40 +91,41 @@ export class SyntheticAccountsService {
     const isDebitAccountsChanged =
       byDebitAccountsIds && byDebitAccountsIds.length > 0;
     if (isDebitAccountsChanged) {
-      updatedSyntheticAccount.byDebitAccounts = await this.resolveLinkedSyntheticAccounts(
+      updatedSyntheticAccountInputs.byDebitAccounts = await this.resolveLinkedSyntheticAccounts(
         byDebitAccountsIds
       );
     } else {
-      delete updatedSyntheticAccount.byDebitAccounts;
+      delete updatedSyntheticAccountInputs.byDebitAccounts;
     }
 
     const isCreditAccountsChanged =
       byCreditAccountsIds && byCreditAccountsIds.length > 0;
     if (isCreditAccountsChanged) {
-      updatedSyntheticAccount.byCreditAccounts = await this.resolveLinkedSyntheticAccounts(
+      updatedSyntheticAccountInputs.byCreditAccounts = await this.resolveLinkedSyntheticAccounts(
         byCreditAccountsIds
       );
     } else {
-      delete updatedSyntheticAccount.byCreditAccounts;
+      delete updatedSyntheticAccountInputs.byCreditAccounts;
     }
 
-    return isDebitAccountsChanged || isCreditAccountsChanged
-      ? await this.syntheticAccountsRepository.updateNestedEntity(
-          account,
-          updatedSyntheticAccount,
-          ['byDebitAccounts', 'byCreditAccounts']
-        )
-      : await this.syntheticAccountsRepository.updateEntity(
-          account,
-          updatedSyntheticAccount,
-          ['byDebitAccounts', 'byCreditAccounts']
-        );
+    const updatedSyntheticAccount =
+      isDebitAccountsChanged || isCreditAccountsChanged
+        ? await this.syntheticAccountsRepository.updateNestedEntity(
+            accountId,
+            updatedSyntheticAccountInputs
+          )
+        : await this.syntheticAccountsRepository.updateEntity(
+            accountId,
+            updatedSyntheticAccountInputs
+          );
+
+    return this.syntheticAccountsRepository.transform(updatedSyntheticAccount);
   }
 
   async validateAccountNumberNotExist(number: number): Promise<void> {
-    const accountWithNumber = await this.syntheticAccountsRepository.getByNumber(
+    const accountWithNumber = await this.syntheticAccountsRepository.getWhere({
       number
-    );
+    });
     if (accountWithNumber) {
       throw new BadRequestException(
         `Synthetic account with provided number "${number}" already exists!`
@@ -137,8 +141,8 @@ export class SyntheticAccountsService {
 
     await Promise.all(
       uniqueSyntheticAccountsIds.map(async (accountId) => {
-        const resolvedAccount = await this.syntheticAccountsRepository.getDatabaseEntityById(
-          accountId.toString(),
+        const resolvedAccount = await this.syntheticAccountsRepository.getById(
+          accountId,
           [],
           true
         );
@@ -149,11 +153,11 @@ export class SyntheticAccountsService {
     return resolvedSyntheticAccounts;
   }
 
-  async delete(entityId: string): Promise<SyntheticAccountEntity> {
-    const deletionEntity = await this.get(entityId, [
-      'byDebitAccounts',
-      'byCreditAccounts'
-    ]);
+  async delete(entityId: number): Promise<SyntheticAccountEntity> {
+    const deletionEntity = await this.syntheticAccountsRepository.getById(
+      entityId,
+      ['byDebitAccounts', 'byCreditAccounts']
+    );
     if (deletionEntity) {
       const isCreditAccountsPopulated =
         deletionEntity.byCreditAccounts.length > 0;
@@ -165,9 +169,11 @@ export class SyntheticAccountsService {
           deletionEntity
         );
       } else {
-        await this.syntheticAccountsRepository.deleteEntity(deletionEntity);
+        await this.syntheticAccountsRepository.deleteEntity(deletionEntity.id);
       }
     }
-    return deletionEntity;
+    return deletionEntity
+      ? this.syntheticAccountsRepository.transform(deletionEntity)
+      : null;
   }
 }
