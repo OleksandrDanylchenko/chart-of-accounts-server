@@ -10,7 +10,11 @@ import { ApiResponseError } from '../common/errors/api-error.schema';
 import { Public } from '../common/decorators/routes-privacy.decorator';
 import { LocalAuthGuard } from './local/guards/local-auth.guard';
 import User from '../models/users/entities/user.entity';
-import { JwtTokensService, TokensPair } from './jwt/jwt-tokens.service';
+import {
+  JwtTokensService,
+  RefreshTokenRequest,
+  TokensPair
+} from './jwt/jwt-tokens.service';
 import { LoginUserDto } from '../models/users/dtos/login-user.dto';
 
 @Public()
@@ -22,7 +26,8 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @ApiBody({ description: "Login user's data", type: LoginUserDto })
   @ApiOkResponse({
-    description: 'JWT access token for provided user data'
+    description: 'JWT access token and refresh token for provided credentials',
+    type: TokensPair
   })
   @ApiUnauthorizedResponse({
     description: 'Cannot find user with provided credentials',
@@ -37,7 +42,8 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @ApiBody({ description: "Registration user's data", type: LoginUserDto })
   @ApiOkResponse({
-    description: 'JWT access token for provided user data'
+    description: 'JWT access token and refresh token for provided credentials',
+    type: TokensPair
   })
   @ApiUnauthorizedResponse({
     description: 'Cannot allow JWT issuing',
@@ -50,17 +56,20 @@ export class AuthController {
   }
 
   @Public()
+  @ApiBody({
+    description: "User's refresh token",
+    type: RefreshTokenRequest
+  })
   @ApiOkResponse({
-    description: 'JWT access token for provided user data'
+    description: 'JWT access token and refresh token for provided credentials',
+    type: TokensPair
   })
   @ApiUnauthorizedResponse({
     description: 'Cannot allow JWT issuing',
     type: ApiResponseError
   })
   @Post('/update-token')
-  async updateToken(
-    @Body() payload: { refreshToken: string }
-  ): Promise<TokensPair> {
+  async updateToken(@Body() payload: RefreshTokenRequest): Promise<TokensPair> {
     return this.tokenService.updateTokens(payload.refreshToken);
   }
 }

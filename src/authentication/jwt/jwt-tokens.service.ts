@@ -6,9 +6,28 @@ import { UsersRepository } from '../../models/users/users.repository';
 import { SignOptions, TokenExpiredError } from 'jsonwebtoken';
 import RefreshToken from '../../models/refreshTokens/entities/refresh-token.entity';
 import { RefreshTokensRepository } from '../../models/refreshTokens/refresh-tokens.repository';
+import { ApiResponseModelProperty } from '@nestjs/swagger/dist/decorators/api-model-property.decorator';
+import { ApiProperty, ApiPropertyOptions } from '@nestjs/swagger';
 
-export interface TokensPair {
+export class TokensPair {
+  @ApiResponseModelProperty({
+    description: 'JWT access token with 30 minutes TTL',
+    type: String
+  } as ApiPropertyOptions)
   accessToken: string;
+
+  @ApiResponseModelProperty({
+    description: 'JWT refresh token with 1 month TTL',
+    type: String
+  } as ApiPropertyOptions)
+  refreshToken: string;
+}
+
+export class RefreshTokenRequest {
+  @ApiProperty({
+    description: "User's refresh token",
+    type: String
+  } as ApiPropertyOptions)
   refreshToken: string;
 }
 
@@ -19,7 +38,7 @@ export interface RefreshTokenPayload {
 
 @Injectable()
 export class JwtTokensService {
-  private static readonly DEFAULT_REFRESH_TOKEN_TTL = 38556952000;
+  private static readonly DEFAULT_REFRESH_TOKEN_TTL = 2629800000;
 
   constructor(
     private readonly jwtService: JwtService,
