@@ -7,8 +7,8 @@ import { UsersService } from '../../models/users/users.service';
 @Injectable()
 export class LocalService {
   constructor(
-    private usersRepository: UsersRepository,
-    private usersService: UsersService
+    private readonly usersRepository: UsersRepository,
+    private readonly usersService: UsersService
   ) {}
 
   async validateExistingUser(email: string, password: string): Promise<User> {
@@ -26,10 +26,17 @@ export class LocalService {
     return null;
   }
 
-  async registerUser(email: string, password: string): Promise<User> {
+  async registerUser(
+    email: string,
+    password: string,
+    registrationSecret: string
+  ): Promise<User> {
     const user = await this.usersRepository.getOneWhere({ email }, [
       'refreshToken'
     ]);
-    return user ?? (await this.usersService.create({ email, password }));
+    return (
+      user ??
+      (await this.usersService.create({ email, password, registrationSecret }))
+    );
   }
 }

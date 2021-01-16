@@ -6,12 +6,14 @@ import { validateOrReject } from 'class-validator';
 import { EditUserDto } from './dtos/edit-user.dto';
 import User from './entities/user.entity';
 import { RegistrationUserDto } from './dtos/registration-user.dto';
+import { AuthConfigService } from '../../config/authentication/config.service';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UsersRepository)
-    private readonly usersRepository: UsersRepository
+    private readonly usersRepository: UsersRepository,
+    private readonly authConfigService: AuthConfigService
   ) {}
 
   async create(inputs: RegistrationUserDto): Promise<User> {
@@ -21,6 +23,7 @@ export class UsersService {
     registrationDto.registrationSecret = inputs.registrationSecret;
 
     await this.validateInputs(registrationDto);
+    await this.validateRegistrationSecret(registrationDto.registrationSecret);
     inputs.password = await hashValue(inputs.password);
     return this.usersRepository.createEntity(inputs);
   }
@@ -33,6 +36,14 @@ export class UsersService {
 
     await this.validateInputs(editDto);
     return this.usersRepository.updateEntity(userId, inputs);
+  }
+
+  async validateRegistrationSecret(registrationSecret?: string): Promise<void> {
+    if (this.authConfigService.registrationSecret !== registrationSecret) {
+      throw new BadRequestException(
+        'Registration secret is not the same as in the system!'
+      );
+    }
   }
 
   async validateInputs(
