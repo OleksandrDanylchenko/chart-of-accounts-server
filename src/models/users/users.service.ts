@@ -5,6 +5,7 @@ import { UserEntity } from './serializers/user.serializers';
 import { hashValue } from '../../common/utils/hashing.helper';
 import { LoginUserDto } from './dtos/login-user.dto';
 import { validateOrReject } from 'class-validator';
+import { EditUserDto } from './dtos/edit-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -13,33 +14,31 @@ export class UsersService {
     private readonly usersRepository: UsersRepository
   ) {}
 
-  async get(
-    id: string,
-    relations: string[] = [],
-    throwsException = false
-  ): Promise<UserEntity | null> {
-    return await this.usersRepository.getById(id, relations, throwsException);
-  }
-
-  async getByEmail(email: string): Promise<UserEntity | null> {
-    return await this.usersRepository.getByEmail(email);
-  }
-
   async create(inputs: LoginUserDto): Promise<UserEntity> {
     await this.validateInputs(inputs);
     inputs.password = await hashValue(inputs.password);
-    return await this.usersRepository.createEntity(inputs);
+    const newUser = await this.usersRepository.createEntity(inputs);
+    return this.usersRepository.transform(newUser);
   }
 
-  async update(user: UserEntity, inputs: LoginUserDto): Promise<UserEntity> {
+  async update(userId: number, inputs: EditUserDto): Promise<UserEntity> {
     await this.validateInputs(inputs);
-    return await this.usersRepository.updateEntity(user, inputs);
+    const updateUser = await this.usersRepository.updateEntity(userId, inputs);
+    return this.usersRepository.transform(updateUser);
   }
 
-  async validateInputs(inputs: LoginUserDto): Promise<void> {
-    const userDto = new LoginUserDto();
-    userDto.email = inputs.email;
-    userDto.password = inputs.password;
+  async validateInputs(inputs: LoginUserDto | EditUserDto): Promise<void> {
+    let userDto;
+    if (inputs instanceof LoginUserDto) {
+      userDto = new LoginUserDto();
+      userDto.email = inputs.email;
+      userDto.password = inputs.password;
+    } else {
+      userDto = new EditUserDto();
+      userDto.email = inputs.email;
+      userDto.password = inputs.password;
+      userDto.refreshTokenId = inputs.refreshTokenId;
+    }
     try {
       await validateOrReject(userDto);
     } catch (errors) {
