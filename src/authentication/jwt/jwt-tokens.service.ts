@@ -7,10 +7,10 @@ import { IJwtPayload } from './strategies/jwt.strategy';
 export class JwtTokensService {
   constructor(private jwtService: JwtService) {}
 
-  async login(user: User): Promise<{ access_token: string }> {
+  async signToken(user: User): Promise<{ accessToken: string }> {
     const payload: IJwtPayload = { email: user.email, sub: user.id };
     return {
-      access_token: this.jwtService.sign(payload)
+      accessToken: this.jwtService.sign(payload)
     };
   }
 }

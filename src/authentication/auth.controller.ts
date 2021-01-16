@@ -29,9 +29,9 @@ export class AuthController {
     type: ApiResponseError
   })
   @Post('/login')
-  async login(@Req() req: Request): Promise<{ access_token: string }> {
+  async login(@Req() req: Request): Promise<{ accessToken: string }> {
     const user = req.user as User;
-    return this.localService.login(user);
+    return this.localService.signToken(user);
   }
 
   @UseGuards(LocalAuthGuard)
@@ -44,8 +44,8 @@ export class AuthController {
     type: ApiResponseError
   })
   @Post('/registration')
-  async register(@Req() req: Request): Promise<{ access_token: string }> {
+  async register(@Req() req: Request): Promise<{ accessToken: string }> {
     const user = req.user as User;
-    return this.localService.login(user);
+    return this.localService.signToken(user);
   }
 }
